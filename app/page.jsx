@@ -1,7 +1,7 @@
-function Home() {
-  return (
-    <p>Hello world</p>
-  );
-}
+import { Button } from "@/components/ui/button";
 
-export default Home
+const Page = () => {
+  return <Button>shadcn</Button>;
+};
+
+export default Page;
