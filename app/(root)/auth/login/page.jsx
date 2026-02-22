@@ -22,6 +22,7 @@ import { useState } from "react";
 
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
+import Link from "next/link";
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false);
@@ -93,28 +94,52 @@ const LoginPage = () => {
                   control={form.control}
                   name="password"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="relative">
                       <FormLabel className="text-xl">Password</FormLabel>
                       <FormControl>
                         <Input
-                          type="password"
-                          placeholder="password"
+                          type={isTypePassword ? "password" : "text"}
+                          placeholder="*******"
                           className="placeholder:text-xl h-12"
                           {...field}
                         />
                       </FormControl>
+                      <button
+                        onClick={() => setIsTypePassword(!isTypePassword)}
+                        className="absolute top-3/5 right-2 cursor-pointer"
+                        type="button"
+                      >
+                        {isTypePassword ? (
+                          <FaRegEyeSlash className="size-6" />
+                        ) : (
+                          <FaRegEye className="size-6" />
+                        )}
+                      </button>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-              <div>
+              <div className="mb-3">
                 <ButtonLoading
                   loading={loading}
                   type="submit"
                   text="Login"
                   className="w-full text-2xl h-12 cursor-pointer"
                 />
+              </div>
+              <div className="text-center">
+                <div className="flex justify-center items-center gap-3">
+                  <p>Don`t have account?</p>
+                  <Link href="" className="text-primary underline">
+                    Create account!
+                  </Link>
+                </div>
+                <div className="mt-3">
+                  <Link href="" className="text-primary underline">
+                    Forgot password?
+                  </Link>
+                </div>
               </div>
             </form>
           </Form>
