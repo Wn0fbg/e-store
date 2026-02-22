@@ -23,29 +23,37 @@ import { useState } from "react";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
-import { WEBSITE_REGISTER } from "@/routes/WebsiteRoute";
+import { WEBSITE_LOGIN } from "@/routes/WebsiteRoute";
 
-const LoginPage = () => {
+const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const [isTypePassword, setIsTypePassword] = useState(true);
 
   const formSchema = zSchema
     .pick({
+      name: true,
       email: true,
+      password: true,
     })
     .extend({
-      password: z.string().min("3", "Password field is required"),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Password and confirm password must be same.",
+      path: ["confirmPassword"],
     });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
-  const handleLoginSubmit = async (values) => {
+  const handleRegisterSubmit = async (values) => {
     console.log(values);
   };
 
@@ -62,14 +70,34 @@ const LoginPage = () => {
           />
         </div>
         <div className="text-center">
-          <h1 className="text-3xl font-bold">Login Into Account</h1>
+          <h1 className="text-3xl font-bold">Create Account</h1>
           <p className="text-xl">
-            Login info your account by filling out the form below.
+            Create new account by filling out the form below.
           </p>
         </div>
         <div>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleLoginSubmit)}>
+            <form onSubmit={form.handleSubmit(handleRegisterSubmit)}>
+              <div className="mt-5">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xl">Full Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Ivanov Ivan"
+                          className="placeholder:text-xl h-12"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <div className="mt-5">
                 <FormField
                   control={form.control}
@@ -121,27 +149,52 @@ const LoginPage = () => {
                   )}
                 />
               </div>
+              <div className="mt-5 mb-5">
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem className="relative">
+                      <FormLabel className="text-xl">
+                        Confirm Password
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type={isTypePassword ? "password" : "text"}
+                          placeholder="*******"
+                          className="placeholder:text-xl h-12"
+                          {...field}
+                        />
+                      </FormControl>
+                      <button
+                        onClick={() => setIsTypePassword(!isTypePassword)}
+                        className="absolute top-3/5 right-2 cursor-pointer"
+                        type="button"
+                      >
+                        {isTypePassword ? (
+                          <FaRegEyeSlash className="size-6" />
+                        ) : (
+                          <FaRegEye className="size-6" />
+                        )}
+                      </button>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <div className="mb-3">
                 <ButtonLoading
                   loading={loading}
                   type="submit"
-                  text="Login"
+                  text="Submit"
                   className="w-full text-2xl h-12 cursor-pointer"
                 />
               </div>
               <div className="text-center">
                 <div className="flex justify-center items-center gap-3">
-                  <p>Don`t have account?</p>
-                  <Link
-                    href={WEBSITE_REGISTER}
-                    className="text-primary underline"
-                  >
-                    Create account!
-                  </Link>
-                </div>
-                <div className="mt-3">
-                  <Link href="" className="text-primary underline">
-                    Forgot password?
+                  <p>Already have account</p>
+                  <Link href={WEBSITE_LOGIN} className="text-primary underline">
+                    Login
                   </Link>
                 </div>
               </div>
@@ -153,4 +206,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
