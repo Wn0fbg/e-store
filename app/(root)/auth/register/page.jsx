@@ -135,7 +135,7 @@ const RegisterPage = () => {
                       </FormControl>
                       <button
                         onClick={() => setIsTypePassword(!isTypePassword)}
-                        className="absolute top-3/5 right-2 cursor-pointer"
+                        className="absolute top-1/2 right-2 cursor-pointer"
                         type="button"
                       >
                         {isTypePassword ? (
@@ -168,7 +168,7 @@ const RegisterPage = () => {
                       </FormControl>
                       <button
                         onClick={() => setIsTypePassword(!isTypePassword)}
-                        className="absolute top-3/5 right-2 cursor-pointer"
+                        className="absolute top-1/2 right-2 cursor-pointer"
                         type="button"
                       >
                         {isTypePassword ? (
@@ -192,9 +192,9 @@ const RegisterPage = () => {
               </div>
               <div className="text-center">
                 <div className="flex justify-center items-center gap-3">
-                  <p>Already have account</p>
+                  <p>Already have account?</p>
                   <Link href={WEBSITE_LOGIN} className="text-primary underline">
-                    Login
+                    Login!
                   </Link>
                 </div>
               </div>

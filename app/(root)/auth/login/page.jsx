@@ -107,7 +107,7 @@ const LoginPage = () => {
                       </FormControl>
                       <button
                         onClick={() => setIsTypePassword(!isTypePassword)}
-                        className="absolute top-3/5 right-2 cursor-pointer"
+                        className="absolute top-1/2 right-2 cursor-pointer"
                         type="button"
                       >
                         {isTypePassword ? (
