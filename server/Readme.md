@@ -1,0 +1,12 @@
+npm install bcrypt
+npm install cloudinary
+npm install cookie-parser
+npm install cors
+npm install dotenv
+npm install express
+npm install express-fileupload
+npm install jsonwebtoken
+npm install nodemailer
+npm i pg
+npm i stripe
+npm init -y
