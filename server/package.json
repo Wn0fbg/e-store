@@ -9,6 +9,7 @@
     "express-fileupload": "^1.5.2",
     "jsonwebtoken": "^9.0.3",
     "nodemailer": "^8.0.1",
+    "nodemon": "^3.1.14",
     "pg": "^8.19.0",
     "stripe": "^20.3.1"
   },
@@ -16,7 +17,6 @@
   "version": "1.0.0",
   "description": "npm install bcrypt npm install cloudinary npm install cookie-parser npm install cors npm install dotenv npm install express npm install express-fileupload npm install jsonwebtoken npm install nodemailer npm i pg npm i stripe",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",

@@ -7,6 +7,7 @@ npm install express
 npm install express-fileupload
 npm install jsonwebtoken
 npm install nodemailer
+npm install nodemon
 npm i pg
 npm i stripe
 npm init -y
