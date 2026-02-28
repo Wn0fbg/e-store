@@ -10,9 +10,9 @@ export async function createOrderItemsTable() {
            quantity INT NOT NULL CHECK (quantity > 0),
            image TEXT NOT NULL,
            title TEXT NOT NULL,
-           created-at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
            FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
-           FOREIGN KEY (product_id) REFERENCES products(id) DELETE CASCADE
+           FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
         )`;
     await database.query(query);
   } catch (error) {

@@ -10,7 +10,7 @@ export async function createProductReviewsTable() {
              rating DECIMAL(3,2) NOT NULL CHECK (rating >= 0 AND rating <= 5),
              comment TEXT NOT NULL,
              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-             FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE,
+             FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
              FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         )`;
     await database.query(query);
