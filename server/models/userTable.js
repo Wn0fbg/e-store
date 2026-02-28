@@ -8,9 +8,9 @@ export async function createUserTable() {
            name VARCHAR(100) NOT NULL CHECK (char_length(name) >= 3),
            email VARCHAR(100) UNIQUE NOT NULL,
            password TEXT NOT NULL,
-           role VARCHAR(10) DEFAULT "User" CHECK (role IN ("User", "Admin")),
+           role VARCHAR(10) DEFAULT 'User' CHECK (role IN ('User', 'Admin')),
            avatar JSONB DEFAULT NULL,
-           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     `;
     await database.query(query);
