@@ -1,5 +1,5 @@
 import { catchAsyncErrors } from "./catchAsyncError.js";
-import ErrorHandler, { errorModdleware } from "./errorMiddleware.js";
+import ErrorHandler from "./errorMiddleware.js";
 import database from "../database/db.js";
 
 export const isAuthenticated = catchAsyncErrors(async (req, res, next) => {
