@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 import { createTables } from "./utils/createTables.js";
 import { errorModdleware } from "./middlewares/errorMiddleware.js";
+import authRouter from "./router/authRouter.js";
 
 const app = express();
 
@@ -28,6 +29,8 @@ app.use(
     useTempFiles: true,
   }),
 );
+
+app.use("/api/auth", authRouter);
 
 createTables();
 
