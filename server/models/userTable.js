@@ -10,6 +10,8 @@ export async function createUserTable() {
            password TEXT NOT NULL,
            role VARCHAR(10) DEFAULT 'User' CHECK (role IN ('User', 'Admin')),
            avatar JSONB DEFAULT NULL,
+           reset_password_token TEXT DEFAULT NULL,
+           reset_password_expire TIMESTAMP DEFAULT NULL,
            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     `;
