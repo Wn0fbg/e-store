@@ -16,6 +16,12 @@ export const register = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Please provide all required fields.", 400));
   }
 
+  if (password.length < 8 || password.length > 16) {
+    return next(
+      new ErrorHandler("Password must be between 8 and 16 characters", 400),
+    );
+  }
+
   const isAlreadyRegistered = await database.query(
     `SELECT * FROM users WHERE email = $1`,
     [email],
@@ -175,5 +181,36 @@ export const forgotPassword = catchAsyncErrors(async (req, res, next) => {
       [email],
     );
     return next(new ErrorHandler("Emaail could not be sant", 500));
+  }
+});
+
+export const resetPassword = catchAsyncErrors(async (req, res, next) => {
+  const { token } = req.params;
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
+  const user = await database.query(
+    "SELECT * FROM user WHERE reset_password_token = $1 AND reset_password_expire > NOW()",
+    [resetPasswordToken],
+  );
+
+  if (user.rows.length === 0) {
+    return next(new ErrorHandler("Invalid or expired reset token.", 400));
+  }
+
+  if (req.body.password !== req.body.confirmPassword) {
+    return next(new ErrorHandler("Password do not match", 400));
+  }
+
+  if (
+    req.body.password.length < 8 ||
+    req.body.password.length > 16 ||
+    req.body.confirmPassword.length < 8 ||
+    req.body.confirmPassword.length > 16
+  ) {
+    return next(
+      new ErrorHandler("Password must be between 8 and 16 characters", 400),
+    );
   }
 });
