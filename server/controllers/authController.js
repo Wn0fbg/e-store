@@ -268,3 +268,15 @@ export const updatePassword = catchAsyncErrors(async (req, res, next) => {
     message: "Password updated successfuly",
   });
 });
+
+export const updateProfile = catchAsyncErrors(async (req, res, next) => {
+  const { name, email } = req.body;
+
+  if (!name || !email) {
+    return next(new ErrorHandler("Please all required fields", 400));
+  }
+
+  if (name.trim().length === 0 || email.trim().length === 0) {
+    return next(new ErrorHandler("Name and email cannot be empty", 400));
+  }
+});
