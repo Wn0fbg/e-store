@@ -191,7 +191,7 @@ export const resetPassword = catchAsyncErrors(async (req, res, next) => {
     .update(token)
     .digest("hex");
   const user = await database.query(
-    "SELECT * FROM user WHERE reset_password_token = $1 AND reset_password_expire > NOW()",
+    "SELECT * FROM users WHERE reset_password_token = $1 AND reset_password_expire > NOW()",
     [resetPasswordToken],
   );
 
@@ -204,13 +204,67 @@ export const resetPassword = catchAsyncErrors(async (req, res, next) => {
   }
 
   if (
-    req.body.password.length < 8 ||
-    req.body.password.length > 16 ||
-    req.body.confirmPassword.length < 8 ||
-    req.body.confirmPassword.length > 16
+    req.body.password?.length < 8 ||
+    req.body.password?.length > 16 ||
+    req.body.confirmPassword?.length < 8 ||
+    req.body.confirmPassword?.length > 16
   ) {
     return next(
       new ErrorHandler("Password must be between 8 and 16 characters", 400),
     );
   }
+
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+  const updatedUser = await database.query(
+    `UPDATE users SET password = $1, 
+      reset_password_token = NULL, 
+      reset_password_expire = NULL WHERE id = $2 RETURNING *`,
+    [hashedPassword, user.rows[0].id],
+  );
+
+  sendToken(updatedUser.rows[0], 200, "Password reset successfuly", res);
+});
+
+export const updatePassword = catchAsyncErrors(async (req, res, next) => {
+  const { currentPassword, newPassword, confirmNewPassword } = req.body;
+
+  if (!currentPassword || !newPassword || !confirmNewPassword) {
+    return next(new ErrorHandler("Please provide all required fields", 400));
+  }
+
+  const isPasswordMatch = await bcrypt.compare(
+    currentPassword,
+    req.user.password,
+  );
+
+  if (!isPasswordMatch) {
+    return next(new ErrorHandler("Current passsword is incorect", 401));
+  }
+
+  if (newPassword !== confirmNewPassword) {
+    return next(new ErrorHandler("New passwords do not match", 400));
+  }
+
+  if (
+    newPassword.length < 8 ||
+    newPassword.length > 16 ||
+    confirmNewPassword.length < 8 ||
+    confirmNewPassword.length > 16
+  ) {
+    return next(
+      new ErrorHandler("Password must be between 8 and 16 characters", 400),
+    );
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  await database.query("UPDATE users SET password = $1 WHERE id = $2", [
+    hashedPassword,
+    req.user.id,
+  ]);
+
+  res.status(200).json({
+    success: true,
+    message: "Password updated successfuly",
+  });
 });
