@@ -279,4 +279,9 @@ export const updateProfile = catchAsyncErrors(async (req, res, next) => {
   if (name.trim().length === 0 || email.trim().length === 0) {
     return next(new ErrorHandler("Name and email cannot be empty", 400));
   }
+
+  let avatarData = {};
+
+  if (req.files && req.files.avatar) {
+  }
 });
