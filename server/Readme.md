@@ -11,3 +11,4 @@ npm install nodemon
 npm i pg
 npm i stripe
 npm init -y
+npm install uuid

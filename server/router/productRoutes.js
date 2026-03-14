@@ -13,3 +13,5 @@ router.post(
   authorizeRoles("Admin"),
   createProduct,
 );
+
+export default router;
