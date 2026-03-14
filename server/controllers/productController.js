@@ -72,3 +72,131 @@ export const createProduct = catchAsyncErrors(async (req, res, next) => {
     product: product.rows[0],
   });
 });
+
+export const fetchAllProducts = catchAsyncErrors(async (req, res, next) => {
+  const { availability, price, category, rating, search } = req.query;
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = 10;
+  const offset = (page - 1) * limit;
+
+  const conditionals = [];
+  let values = [];
+  let index = 1;
+
+  let paginationPlaceholders = {};
+
+  // Filter products by availability
+  if (availability === "in-stock") {
+    conditionals.push(`stock > 5`);
+  } else if (availability === "limited") {
+    conditionals.push(`stock > 0 AND stock <= 5`);
+  } else if (availability === "out-of-stock") {
+    conditionals.push(`stock = 0`);
+  }
+
+  // Filter products by pirce
+  if (price) {
+    const [minPrice, maxPrice] = price.split("-");
+
+    if (minPrice && maxPrice) {
+      conditionals.push(`price BETWEEN $${index} AND $${index + 1}`);
+      values.push(minPrice, maxPrice);
+      index += 2;
+    }
+  }
+
+  // Filter products by category
+  if (category) {
+    conditionals.push(`category ILIKE $${index}`);
+    values.push(`%${category}%`);
+    index++;
+  }
+
+  // Filter products by rating
+  if (rating) {
+    conditionals.push(`rating >= $${index}`);
+    values.push(rating);
+    index++;
+  }
+
+  // Add searc query
+  if (search) {
+    conditionals.push(
+      `(p.name ILIKE $${index} OR p.description ILIKE $${index})`,
+    );
+    values.push(`%${search}%`);
+    index++;
+  }
+
+  const whereClause = conditionals.length
+    ? `WHERE ${conditionals.join(" AND ")}`
+    : "";
+
+  // Get count of filtered products
+  const totalProductsResult = await database.query(
+    `SELECT COUNT(*) FROM products p ${whereClause}`,
+    values,
+  );
+
+  const totalProducts = parseInt(totalProductsResult.rows[0].count);
+
+  paginationPlaceholders.limit = `$${index}`;
+  values.push(limit);
+  index++;
+
+  paginationPlaceholders.offset = `$${index}`;
+  values.push(offset);
+  index++;
+
+  // FETCH WITH REVIEWS
+  const query = `
+    SELECT p.*, 
+    COUNT(r,id) AS reviews_count 
+    FROM products p 
+    LEFT JSON reviews or ON p.id = r.product_id
+    ${whereClause}
+    GROUP BY p.id
+    ORDER BY p.created_at DESC
+    LIMIT ${paginationPlaceholders.limit}
+    LIMIT ${paginationPlaceholders.offset}
+  `;
+
+  const result = await database.query(query, values);
+
+  // Query for fetching new products
+  const newProductsQuery = `
+    SELECT p.*,
+    COUNT(r.id) AS review_count
+    FROM products p
+    LEFT JSON reviews r ON p.id = r.product_id
+    WHERE p.created_at >= NOW() - INTERVAL '30 days'
+    GROUP BY p.id,
+    ORDER BY p.created_at DESC
+    LIMIT 8
+  `;
+
+  const newProductsResult = await database.query(newProductsQuery);
+
+  // Query for fetching top rating products (rating >= 4.5)
+  const topRatedQuery = `
+    SELECT p.*,
+    COUNT(r.id) AS review_count
+    FROM products p
+    LEFT JSON reviews r ON p.id = r.product_id
+    WHERE p.rating >= 4.5
+    GROUP BY p.id,
+    ORDER BY p.created_at DESC
+    LIMIT 8
+  `;
+
+  const topRatedResult = await database.query(topRatedQuery);
+
+  res.status(200).json({
+    success: true,
+    products: result.rows,
+    totalProducts,
+    newProducts: newProductsResult.rows,
+    topRatedProducts: topRatedQuery.rows,
+  });
+});
