@@ -172,7 +172,7 @@ export const fetchAllProducts = catchAsyncErrors(async (req, res, next) => {
     LEFT JSON reviews r ON p.id = r.product_id
     WHERE p.created_at >= NOW() - INTERVAL '30 days'
     GROUP BY p.id,
-    ORDER BY p.created_at DESC
+    ORDER BY p.created_at DESC, p.created_at DESC
     LIMIT 8
   `;
 
