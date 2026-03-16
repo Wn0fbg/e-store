@@ -2,6 +2,7 @@ import express from "express";
 import {
   createProduct,
   fetchAllProducts,
+  updateProduct,
 } from "../controllers/productController.js";
 import {
   authorizeRoles,
@@ -17,5 +18,11 @@ router.post(
   createProduct,
 );
 router.get("/", fetchAllProducts);
+router.put(
+  "/admin/update/:productId",
+  isAuthenticated,
+  authorizeRoles("Admin"),
+  updateProduct,
+);
 
 export default router;

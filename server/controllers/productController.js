@@ -181,7 +181,7 @@ export const fetchAllProducts = catchAsyncErrors(async (req, res, next) => {
     LEFT JOIN reviews r ON p.id = r.product_id
     WHERE p.rating >= 4.5
     GROUP BY p.id
-    ORDER BY p.created_at DESC
+    ORDER BY p.created_at DESC, p.created_at DESC
     LIMIT 8
   `;
   const topRatedResult = await database.query(topRatedQuery);
@@ -193,4 +193,8 @@ export const fetchAllProducts = catchAsyncErrors(async (req, res, next) => {
     newProducts: newProductsResult.rows,
     topRatedProducts: topRatedResult.rows,
   });
+});
+
+export const updateProduct = catchAsyncErrors(async (req, res, next) => {
+  const { productId } = req.params;
 });
