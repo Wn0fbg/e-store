@@ -84,9 +84,7 @@ export const fetchAllProducts = catchAsyncErrors(async (req, res, next) => {
   let values = [];
   let index = 1;
 
-  let paginationPlaceholders = {};
-
-  // Filter products by availability
+  // Filter by availability
   if (availability === "in-stock") {
     conditionals.push(`stock > 5`);
   } else if (availability === "limited") {
@@ -95,10 +93,9 @@ export const fetchAllProducts = catchAsyncErrors(async (req, res, next) => {
     conditionals.push(`stock = 0`);
   }
 
-  // Filter products by pirce
+  // Filter by price
   if (price) {
     const [minPrice, maxPrice] = price.split("-");
-
     if (minPrice && maxPrice) {
       conditionals.push(`price BETWEEN $${index} AND $${index + 1}`);
       values.push(minPrice, maxPrice);
@@ -106,21 +103,21 @@ export const fetchAllProducts = catchAsyncErrors(async (req, res, next) => {
     }
   }
 
-  // Filter products by category
+  // Filter by category
   if (category) {
     conditionals.push(`category ILIKE $${index}`);
     values.push(`%${category}%`);
     index++;
   }
 
-  // Filter products by rating
+  // Filter by rating
   if (rating) {
     conditionals.push(`rating >= $${index}`);
     values.push(rating);
     index++;
   }
 
-  // Add searc query
+  // Filter by search in name/description
   if (search) {
     conditionals.push(
       `(p.name ILIKE $${index} OR p.description ILIKE $${index})`,
@@ -138,28 +135,26 @@ export const fetchAllProducts = catchAsyncErrors(async (req, res, next) => {
     `SELECT COUNT(*) FROM products p ${whereClause}`,
     values,
   );
+  const totalProducts = parseInt(totalProductsResult.rows[0].count, 10);
 
-  const totalProducts = parseInt(totalProductsResult.rows[0].count);
-
-  paginationPlaceholders.limit = `$${index}`;
+  // Pagination placeholders (use one set of parameters, not two LIMITs)
+  const paginationLimitParam = `$${index}`;
   values.push(limit);
   index++;
 
-  paginationPlaceholders.offset = `$${index}`;
+  const paginationOffsetParam = `$${index}`;
   values.push(offset);
   index++;
 
-  // FETCH WITH REVIEWS
+  // FETCH WITH REVIEWS (correct JOIN)
   const query = `
-    SELECT p.*, 
-    COUNT(r,id) AS reviews_count 
-    FROM products p 
-    LEFT JSON reviews or ON p.id = r.product_id
+    SELECT p.*, COUNT(r.id) AS reviews_count
+    FROM products p
+    LEFT JOIN reviews r ON p.id = r.product_id
     ${whereClause}
     GROUP BY p.id
     ORDER BY p.created_at DESC
-    LIMIT ${paginationPlaceholders.limit}
-    LIMIT ${paginationPlaceholders.offset}
+    LIMIT ${paginationLimitParam} OFFSET ${paginationOffsetParam}
   `;
 
   const result = await database.query(query, values);
@@ -169,10 +164,10 @@ export const fetchAllProducts = catchAsyncErrors(async (req, res, next) => {
     SELECT p.*,
     COUNT(r.id) AS review_count
     FROM products p
-    LEFT JSON reviews r ON p.id = r.product_id
+    LEFT JOIN reviews r ON p.id = r.product_id
     WHERE p.created_at >= NOW() - INTERVAL '30 days'
-    GROUP BY p.id,
-    ORDER BY p.created_at DESC, p.created_at DESC
+    GROUP BY p.id
+    ORDER BY p.created_at DESC
     LIMIT 8
   `;
 
@@ -183,13 +178,12 @@ export const fetchAllProducts = catchAsyncErrors(async (req, res, next) => {
     SELECT p.*,
     COUNT(r.id) AS review_count
     FROM products p
-    LEFT JSON reviews r ON p.id = r.product_id
+    LEFT JOIN reviews r ON p.id = r.product_id
     WHERE p.rating >= 4.5
-    GROUP BY p.id,
+    GROUP BY p.id
     ORDER BY p.created_at DESC
     LIMIT 8
   `;
-
   const topRatedResult = await database.query(topRatedQuery);
 
   res.status(200).json({
@@ -197,6 +191,6 @@ export const fetchAllProducts = catchAsyncErrors(async (req, res, next) => {
     products: result.rows,
     totalProducts,
     newProducts: newProductsResult.rows,
-    topRatedProducts: topRatedQuery.rows,
+    topRatedProducts: topRatedResult.rows,
   });
 });
