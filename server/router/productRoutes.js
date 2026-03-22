@@ -3,6 +3,7 @@ import {
   createProduct,
   fetchAllProducts,
   updateProduct,
+  deleteProduct,
 } from "../controllers/productController.js";
 import {
   authorizeRoles,
@@ -23,6 +24,12 @@ router.put(
   isAuthenticated,
   authorizeRoles("Admin"),
   updateProduct,
+);
+router.delete(
+  "/admin/delete/:productId",
+  isAuthenticated,
+  authorizeRoles("Admin"),
+  deleteProduct,
 );
 
 export default router;
