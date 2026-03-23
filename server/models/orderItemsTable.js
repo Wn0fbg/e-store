@@ -3,7 +3,7 @@ import database from "../database/db.js";
 export async function createOrderItemsTable() {
   try {
     const query = `
-        CREATE TABLE IF NOT EXISTS order_item (
+        CREATE TABLE IF NOT EXISTS order_items (
            id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
            order_id UUID NOT NULL,
            product_id UUID NOT NULL,

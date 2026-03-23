@@ -9,7 +9,7 @@ export async function createProductTable() {
            description TEXT NOT NULL,
            price DECIMAL(10, 2) NOT NULL CHECK (price >= 0),
            category VARCHAR(100) NOT NULL,
-           rating DECIMAL(3, 2) DEFAULT 0 CHECK (rating BETWEEN 0 AND 5),
+           ratings DECIMAL(3, 2) DEFAULT 0 CHECK (rating BETWEEN 0 AND 5),
            images JSONB DEFAULT '[]'::JSONB,
            stock INT NOT NULL CHECK (stock >= 0),
            created_by UUID NOT NULL,

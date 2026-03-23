@@ -4,6 +4,8 @@ import {
   fetchAllProducts,
   updateProduct,
   deleteProduct,
+  fetchSingleProduct,
+  postProductReview,
 } from "../controllers/productController.js";
 import {
   authorizeRoles,
@@ -19,6 +21,8 @@ router.post(
   createProduct,
 );
 router.get("/", fetchAllProducts);
+router.get("/singleProduct/:productId", fetchSingleProduct);
+router.put("/post-new/review/:productId", isAuthenticated, postProductReview);
 router.put(
   "/admin/update/:productId",
   isAuthenticated,
