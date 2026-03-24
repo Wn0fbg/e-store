@@ -7,6 +7,7 @@ import { createTables } from "./utils/createTables.js";
 import { errorModdleware } from "./middlewares/errorMiddleware.js";
 import authRouter from "./router/authRouter.js";
 import productRouter from "./router/productRoutes.js";
+import adminRouter from "./router/adminRoutes.js";
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use(
 
 app.use("/api/auth", authRouter);
 app.use("/api/product", productRouter);
+app.use("/api/admin", adminRouter);
 
 createTables();
 
