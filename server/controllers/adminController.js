@@ -50,32 +50,36 @@ export const dashboardStats = catchAsyncErrors(async (req, res, next) => {
   const todayDate = today.toISOString().split("T")[0];
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
-
   const yesterdayDate = yesterday.toISOString().split("T")[0];
 
   const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-  const previeousMonthStart = new Date(
+  const currentMonthEnd = new Date(
     today.getFullYear(),
-    today.getMonth() - 1,
+    today.getMonth() + 1,
+    0,
   );
 
+  const previousMonthStart = new Date(
+    today.getFullYear(),
+    today.getMonth() - 1,
+    1,
+  );
   const previousMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
 
+  // Total Revenue All Time
   const totalRevenueAllTimeQuery = await database.query(`
     SELECT SUM(total_price) FROM orders 
   `);
-
   const totalRevenueAllTime =
     parseFloat(totalRevenueAllTimeQuery.rows[0].sum) || 0;
 
-  // total Users
+  // Total Users
   const totalUsersCountQuery = await database.query(`
         SELECT COUNT(*) FROM users WHERE role = 'User'
   `);
-
   const totalUsersCount = parseInt(totalUsersCountQuery.rows[0].count) || 0;
 
-  // order status counts
+  // Order status counts
   const orderStatusCountsQuery = await database.query(`
     SELECT order_status, COUNT(*) FROM orders GROUP BY order_status
   `);
@@ -85,15 +89,123 @@ export const dashboardStats = catchAsyncErrors(async (req, res, next) => {
     Shipped: 0,
     Delivered: 0,
     Canceled: 0,
-    g,
   };
 
   orderStatusCountsQuery.rows.forEach((row) => {
     orderStatusCounts[row.order_status] = parseInt(row.count);
   });
 
-  // today's revenue
-  const todayRevenueQuery = await database.query(`
-    SELECT SUM(total_price) FROM orders WHERE DATE(created_at) = $1
-  `, [todayDate]);
+  // Today's Revenue
+  const todayRevenueQuery = await database.query(
+    `
+    SELECT SUM(total_price) FROM orders WHERE created_at::date = $1
+  `,
+    [todayDate],
+  );
+  const todayRevenue = parseFloat(todayRevenueQuery.rows[0].sum) || 0;
+
+  // Yesterday's Revenue
+  const yesterdayRevenueQuery = await database.query(
+    `
+    SELECT SUM(total_price) FROM orders WHERE created_at::date = $1
+  `,
+    [yesterdayDate],
+  );
+  const yesterdayRevenue = parseFloat(yesterdayRevenueQuery.rows[0].sum) || 0;
+
+  // Monthly Sales For Line Chart
+  const monthlySalesQuery = await database.query(`
+    SELECT
+      TO_CHAR(created_at, 'Mon YYYY') AS month,
+      DATE_TRUNC('month', created_at) AS date,
+      SUM(total_price) AS totalSales
+    FROM orders
+    GROUP BY month, date
+    ORDER BY date ASC
+  `);
+
+  const monthlySales = monthlySalesQuery.rows.map((row) => ({
+    month: row.month,
+    totalSales: parseFloat(row.totalSales) || 0,
+  }));
+
+  // Top 5 Most Sold Products
+  const topSellingProductsQuery = await database.query(`
+    SELECT
+      p.name,
+      p.images->0->>'url' AS image,
+      p.category,
+      p.rating
+    , SUM(oi.quantity) AS total_sold
+    FROM order_items oi
+    JOIN products p ON p.id = oi.product_id
+    GROUP BY p.name, p.images, p.category, p.rating
+    ORDER BY total_sold DESC
+    LIMIT 5
+  `);
+
+  const topSellingProducts = topSellingProductsQuery.rows;
+
+  // Total Sales of Current Month
+  const currentMonthSalesQuery = await database.query(
+    `
+    SELECT SUM(total_price) AS total
+    FROM orders
+    WHERE created_at BETWEEN $1 AND $2
+  `,
+    [currentMonthStart, currentMonthEnd],
+  );
+
+  const currentMonthSales =
+    parseFloat(currentMonthSalesQuery.rows[0].total) || 0;
+
+  // Products with stock less than or equal to 5
+  const lowStockProductsQuery = await database.query(`
+    SELECT name, stock FROM products WHERE stock <= 5
+  `);
+  const lowStockProducts = lowStockProductsQuery.rows;
+
+  // Revenue Growth Rate (%)
+  const lastMonthRevenueQuery = await database.query(
+    `
+    SELECT SUM(total_price) AS total
+    FROM orders 
+    WHERE created_at BETWEEN $1 AND $2
+  `,
+    [previousMonthStart, previousMonthEnd],
+  );
+  const lastMonthRevenue = parseFloat(lastMonthRevenueQuery.rows[0].total) || 0;
+
+  let revenueGrowth = "0%";
+  if (lastMonthRevenue > 0) {
+    const growthRate =
+      ((currentMonthSales - lastMonthRevenue) / lastMonthRevenue) * 100;
+    revenueGrowth = `${growthRate >= 0 ? "+" : ""}${growthRate.toFixed(2)}`;
+  }
+
+  // New Users This Month
+  const newUsersThisMonthQuery = await database.query(
+    `
+    SELECT COUNT(*) FROM users WHERE created_at >= $1 AND role = 'User'
+  `,
+    [currentMonthStart],
+  );
+  const newUsersThisMonth = parseInt(newUsersThisMonthQuery.rows[0].count) || 0;
+
+  // Final Response
+  res.status(200).json({
+    success: true,
+    message: "Dashboard Stats Fetched Successfully",
+    totalRevenueAllTime,
+    todayRevenue,
+    yesterdayRevenue,
+    totalUsersCount,
+    orderStatusCounts,
+    monthlySales,
+    currentMonthSales,
+    lowStockProducts,
+    revenueGrowth,
+    newUsersThisMonth,
+    topSellingProducts,
+  });
 });
