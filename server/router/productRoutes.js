@@ -7,6 +7,7 @@ import {
   fetchSingleProduct,
   postProductReview,
   deleteReview,
+  fetchFilteredProducts,
 } from "../controllers/productController.js";
 import {
   authorizeRoles,
@@ -24,7 +25,7 @@ router.post(
 router.get("/", fetchAllProducts);
 router.get("/singleProduct/:productId", fetchSingleProduct);
 router.put("/post-new/review/:productId", isAuthenticated, postProductReview);
-router.delete("/delete/review/:productId".isAuthenticated, deleteProduct);
+router.delete("/delete/review/:productId".isAuthenticated, deleteReview);
 router.put(
   "/admin/update/:productId",
   isAuthenticated,
@@ -37,5 +38,6 @@ router.delete(
   authorizeRoles("Admin"),
   deleteProduct,
 );
+router.post("/search", isAuthenticated, fetchFilteredProducts);
 
 export default router;

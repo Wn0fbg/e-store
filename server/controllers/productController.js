@@ -418,7 +418,113 @@ export const fetchFilteredProducts = catchAsyncErrors(
     }
 
     const filteredKeywords = (query) => {
-      const stopWords = new Set({});
+      const stopWords = new Set([
+        "the",
+        "they",
+        "then",
+        "them",
+        "I",
+        "we",
+        "you",
+        "he",
+        "she",
+        "it",
+        "is",
+        "a",
+        "an",
+        "of",
+        "and",
+        "to",
+        "for",
+        "from",
+        "on",
+        "who",
+        "whom",
+        "why",
+        "when",
+        "which",
+        "with",
+        "this",
+        "that",
+        "in",
+        "at",
+        "by",
+        "be",
+        "not",
+        "was",
+        "were",
+        "has",
+        "have",
+        "had",
+        "do",
+        "does",
+        "did",
+        "so",
+        "some",
+        "any",
+        "how",
+        "can",
+        "could",
+        "should",
+        "would",
+        "there",
+        "here",
+        "just",
+        "than",
+        "because",
+        "but",
+        "its",
+        "it's",
+        "if",
+        ".",
+        ",",
+        "!",
+        "?",
+        ">",
+        "<",
+        ";",
+        "`",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+      ]);
+
+      return query
+        .toLowerCase()
+        .replace(/[^\w\s]/g, "")
+        .split(/\s+/)
+        .filter((word) => !stopWords.has(word))
+        .map((word) => `%${word}$%`);
     };
+
+    const keywords = filteredKeywords(userPrompt);
+
+    const result = await database.query(
+      `
+        SELECT * FROM products 
+        WHERE name ILIKE  ANY($1)
+        OR description ILIKE ANY($1)
+        OR category ILIKE ANY($1)
+        LIMIT 200;
+      `,
+      [keywords],
+    );
+
+    const filteredProducts = result.rows;
+
+    if (filteredProducts.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "No products found matching your prompt",
+        products: [],
+      });
+    }
   },
 );
