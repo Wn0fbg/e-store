@@ -8,6 +8,7 @@ import { errorModdleware } from "./middlewares/errorMiddleware.js";
 import authRouter from "./router/authRouter.js";
 import productRouter from "./router/productRoutes.js";
 import adminRouter from "./router/adminRoutes.js";
+import orderRouter from "./router/orderRoutes.js";
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use(
 app.use("/api/auth", authRouter);
 app.use("/api/product", productRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/order", orderRouter);
 
 createTables();
 
