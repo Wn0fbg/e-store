@@ -112,7 +112,7 @@ export const placeNewOrder = catchAsyncErrors(async (req, res, next) => {
   });
 
   const tax_price = 0.008;
-  const shipping_price = 2;
+  const shipping_price = total_price >= 0 ? 0 : 2;
   total_price = Math.round(
     total_price + total_price * tax_price + shipping_price,
   );
