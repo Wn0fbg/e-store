@@ -1,7 +1,7 @@
 import { Menu, User, ShoppingCart, Sun, Moon, Search } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSearchBar, toggleCart } from "../../store/slices/popupSlice";
+import { toggleSidebar, toggleCart } from "../../store/slices/popupSlice";
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
@@ -21,7 +21,7 @@ const Navbar = () => {
           <div className="flex items-center justify-between h-16">
             {/* LEFT burger menu */}
             <button
-              onClick={() => dispatch(toggleSearchBar)}
+              onClick={() => dispatch(toggleSidebar())}
               className="p-2 rounded-lg hover:bg-secondary transition-colors"
             >
               <Menu className="w-6 h-6 text-foreground" />
@@ -48,7 +48,7 @@ const Navbar = () => {
 
               {/* Search overlay */}
               <button
-                onClick={() => dispatch(toggleSearchBar())}
+                onClick={() => dispatch(toggleSidebar())}
                 className="p-2 rounded-lg hover:bg-secondary transition-colors"
               >
                 <Search className="w-5 h-5 text-foreground" />
