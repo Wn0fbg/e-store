@@ -17,7 +17,16 @@ const Sidebar = () => {
   const { authUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  const menuItems = [];
+  const menuItems = [
+    { name: "Home", icon: Home, path: "/" },
+    { name: "Products", icon: Package, path: "/products" },
+    { name: "About", icon: Info, path: "/about" },
+    { name: "FAQ", icon: HelpCircle, path: "/faq" },
+    { name: "Contact", icon: Phone, path: "/contact" },
+    { name: "Cart", icon: ShoppingCart, path: "/cart" },
+    authUser && { name: "My Orders", icon: List, path: "/orders" },
+  ];
+
   const { isSidebarOpen } = useSelector((state) => state.popup);
   if (!isSidebarOpen) return null;
 
@@ -40,6 +49,25 @@ const Sidebar = () => {
             <X className="size-5 text-primary" />
           </button>
         </div>
+
+        <nav className="p-6">
+          <ul className="space-y-2">
+            {menuItems.filter(Boolean).map((item) => {
+              return (
+                <li key={item.name}>
+                  <Link
+                    to={item.path}
+                    onClick={() => dispatch(toggleSidebar())}
+                    className="flex items-center space-x-3 p-3 rounded-lg glass-card hover:glow-in-hover animate-smooth text-foreground hover:text-primary group"
+                  >
+                    <item.icon className="size-5 group-hover:text-primary" />
+                    <span className="font-medium">{item.name}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
       </div>
     </>
   );
