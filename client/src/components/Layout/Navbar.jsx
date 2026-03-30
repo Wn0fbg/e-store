@@ -5,6 +5,7 @@ import {
   toggleSidebar,
   toggleCart,
   toggleSearchBar,
+  toggleAuthPopup,
 } from "../../store/slices/popupSlice";
 
 const Navbar = () => {
@@ -60,7 +61,7 @@ const Navbar = () => {
 
               {/* User profile */}
               <button
-                onClick={() => dispatch(toggleSearchBar())}
+                onClick={() => dispatch(toggleAuthPopup())}
                 className="p-2 rounded-lg hover:bg-secondary transition-colors"
               >
                 <User className="w-5 h-5 text-foreground" />
