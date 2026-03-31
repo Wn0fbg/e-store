@@ -61,9 +61,8 @@ const ProfilePanel = () => {
       {/* Overlay  */}
       <div
         className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-        onClick={() => dispatch(toggleCart())}
+        onClick={() => dispatch(toggleAuthPopup())}
       />
-
       {/* Profile panel */}
       <div className="fixed right-0 top-0 h-full w-96 z-50 glass-panel animate-slide-in-right overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-[hsla(var(--glass-border))]">

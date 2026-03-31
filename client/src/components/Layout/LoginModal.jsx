@@ -85,9 +85,9 @@ const LoginModal = () => {
       <div className="fixed inset-0 z-50 flex items-center justify-center">
         {/* Overlay */}
         <div className="absolute inset-0 backdrop-blur-md bg-[hsla(var(--glass-bg))]">
-          <div className="relative z-10 glass-panel w-full max-w-md mx-4 animate-fade-in-up">
+          <div className="relative z-10 glass-panel w-full max-w-md mt-[200px] ml-[725px] animate-fade-in-up">
             {/* Header */}
-            <div className="flex items-center justify-center mb-6">
+            <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-primary">
                 {mode === "reset"
                   ? "Reset Password"
@@ -95,7 +95,7 @@ const LoginModal = () => {
                     ? "Create Account"
                     : mode === "forgot"
                       ? "Forgot Password"
-                      : "Welcome back"}
+                      : "Welcome Back"}
               </h2>
               <button
                 onClick={() => dispatch(toggleAuthPopup())}
@@ -104,6 +104,148 @@ const LoginModal = () => {
                 <X className="size-5 text-primary" />
               </button>
             </div>
+
+            {/* Authentication form */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Full name - only for sign up */}
+              {mode === "signup" && (
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 size-5 text-muted-foreground" />
+                  <input
+                    type="text"
+                    placeholder="Full name"
+                    value={formData.name}
+                    onChange={(e) => {
+                      setFormData({ ...formData, name: e.target.value });
+                    }}
+                    className="w-full pl-10 pr-4 py-3 bg-secondary border border-border rounded-lg focus:outline-none"
+                    required
+                  />
+                </div>
+              )}
+
+              {/* Email - always visible except reset mode */}
+              {mode !== "reset" && (
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 size-5 text-muted-foreground" />
+                  <input
+                    type="email"
+                    placeholder="Email Address"
+                    value={formData.email}
+                    onChange={(e) => {
+                      setFormData({ ...formData, email: e.target.value });
+                    }}
+                    className="w-full pl-10 pr-4 py-3 bg-secondary border border-border rounded-lg focus:outline-none"
+                    required
+                  />
+                </div>
+              )}
+
+              {/* Pasword - always visible except forgot mode */}
+              {mode !== "forgot" && (
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 size-5 text-muted-foreground" />
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={(e) => {
+                      setFormData({ ...formData, password: e.target.value });
+                    }}
+                    className="w-full pl-10 pr-4 py-3 bg-secondary border border-border rounded-lg focus:outline-none"
+                    required
+                  />
+                </div>
+              )}
+
+              {/* Confirm pasword - always visible for reset mode */}
+              {mode === "reset" && (
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 size-5 text-muted-foreground" />
+                  <input
+                    type="password"
+                    placeholder="Confirm Password"
+                    value={formData.confirmPassword}
+                    onChange={(e) => {
+                      setFormData({
+                        ...formData,
+                        confirmPassword: e.target.value,
+                      });
+                    }}
+                    className="w-full pl-10 pr-4 py-3 bg-secondary border border-border rounded-lg focus:outline-none"
+                    required
+                  />
+                </div>
+              )}
+
+              {/* Forgot password toggle button */}
+              {mode === "signin" && (
+                <div className="text-right text-sm">
+                  <button
+                    type="button"
+                    onClick={() => setMode("forgot")}
+                    className="text-primary hover:text-accent animate-smooth"
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
+              )}
+
+              {/* Submit button */}
+              <button
+                type="submit"
+                disabled={isLoading}
+                className={`w-full py-3 gradient-primary flex justify-center 
+                items-center gap-2 text-primary-foreground rounded-lg font-semibold
+                animate-smooth ${
+                  isLoading
+                    ? "opacity-70 cursor-not-allowed"
+                    : "hover:glow-on-hover"
+                }`}
+              >
+                {isLoading ? (
+                  <>
+                    <div className="size-5 border border-white border-t-transparent rounded-full animate-spin" />
+                    <span>
+                      {mode === "reset"
+                        ? "Reseting password"
+                        : mode === "signup"
+                          ? "Signing up"
+                          : mode === "forgot"
+                            ? "Requesting for email"
+                            : "Signing in"}{" "}
+                    </span>
+                  </>
+                ) : mode === "reset" ? (
+                  "Reset password"
+                ) : mode === "signup" ? (
+                  "Create account"
+                ) : mode === "forgot" ? (
+                  "Send reset email"
+                ) : (
+                  "Sign in"
+                )}
+              </button>
+            </form>
+
+            {/* mode toggle */}
+            {["signin", "signup"].includes(mode) && (
+              <div className="mt-6 text-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode((prev) =>
+                      prev === "signup" ? "signin" : "signup",
+                    );
+                  }}
+                  className="text-primary hover:text-accent animate-smooth"
+                >
+                  {mode === "signup"
+                    ? "Already have an account? Sign in"
+                    : "Dont have an account? Sign up"}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
