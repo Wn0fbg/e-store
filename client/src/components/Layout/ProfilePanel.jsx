@@ -7,10 +7,11 @@ import {
   updatePassword,
   updateProfile,
 } from "../../store/slices/authSlice";
-import { toggleAuthPopup } from "../../store/slices/popupSlice";
+import { toggleAuthPopup, toggleSidebar } from "../../store/slices/popupSlice";
 
 const ProfilePanel = () => {
   const dispatch = useDispatch();
+
   const { isAuthPopupOpen } = useSelector((state) => state.popup);
   const { authUser, isUpdatingProfile, isUpdatingPassword } = useSelector(
     (state) => state.auth,
@@ -22,18 +23,17 @@ const ProfilePanel = () => {
 
   useEffect(() => {
     if (authUser) {
-      setName(authUser?.name || "");
-      setEmail(authUser?.email || "");
+      setName(authUser.name || "");
+      setEmail(authUser.email || "");
     }
   }, [authUser]);
 
-  const [showPassword, setShowPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
   const handleLogout = () => {
-    dispatch(logout);
+    dispatch(logout());
   };
 
   const handleUpdateProfile = () => {
@@ -50,7 +50,6 @@ const ProfilePanel = () => {
     formData.append("currentPassword", currentPassword);
     formData.append("newPassword", newPassword);
     formData.append("confirmNewPassword", confirmNewPassword);
-
     dispatch(updatePassword());
   };
 
@@ -61,12 +60,13 @@ const ProfilePanel = () => {
       {/* Overlay  */}
       <div
         className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-        onClick={() => dispatch(toggleAuthPopup())}
+        onClick={() => dispatch(toggleSidebar())}
       />
+
       {/* Profile panel */}
       <div className="fixed right-0 top-0 h-full w-96 z-50 glass-panel animate-slide-in-right overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-[hsla(var(--glass-border))]">
-          <h2 className="text-xl font-semibold text-primary">Profile Panel</h2>
+          <h2 className="text-xl font-semibold text-primary">Profile</h2>
           <button
             onClick={() => dispatch(toggleAuthPopup())}
             className="p-2 rounded-lg glass-card hover:glow-on-hover animate-smooth"
@@ -89,7 +89,7 @@ const ProfilePanel = () => {
             <p className="text-muted-foreground">{authUser?.email}</p>
           </div>
 
-          {/* Profile update form */}
+          {/* Profile update UI */}
           {authUser && (
             <div className="space-y-4 mb-8">
               <h3 className="text-lg font-semibold text-primary">
@@ -104,12 +104,12 @@ const ProfilePanel = () => {
               />
               <input
                 type="email"
-                placeholder="Email Address"
+                placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full p-2 rounded border border-border bg-secondary text-foreground"
               />
-              <label className="flex items-center gap-2 cursor-pointer text-sm">
+              <label className="flex items-center gap-2 cursor-pointer text-sm text-muted-foreground">
                 <Upload className="size-4 text-primary" />
                 <span>Upload Avatar</span>
                 <input
@@ -118,88 +118,15 @@ const ProfilePanel = () => {
                   onChange={(e) => setAvatar(e.target.files[0])}
                   className="hidden"
                 />
+                <button
+                  onClick={handleUpdateProfile}
+                  className="flex justify-center items-center space-x-3 p-3 rounded-lg glass-card hover:glow-on-hover animate-smooth group w-full"
+                >
+                  {isUpdatingProfile ? <></> : <></>}
+                </button>
               </label>
-              <button
-                onClick={handleUpdateProfile}
-                className="flex justify-center items-center space-x-3 p-3 rounded-lg glass-card hover:glow-on-hover animate-smooth group w-full"
-              >
-                {isUpdatingProfile ? (
-                  <>
-                    <div
-                      className={`size-5 border-2 border-white border-t-transparent rounded-full animate-spin`}
-                    />
-                    <span>Updating Profile...</span>
-                  </>
-                ) : (
-                  "Save Changes"
-                )}
-              </button>
             </div>
           )}
-
-          {/* Update password form */}
-          <div className="space-y-4 mb-8">
-            <h3 className="text-lg font-semibold text-primary">
-              Update Password
-            </h3>
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Current Password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full p-2 rounded border border-border bg-secondary text-foreground"
-            />
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="New Password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full p-2 rounded border border-border bg-secondary text-foreground"
-            />
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Confirm Password"
-              value={newPassword}
-              onChange={(e) => setConfirmNewPassword(e.target.value)}
-              className="w-full p-2 rounded border border-border bg-secondary text-foreground"
-            />
-            <button
-              onClick={() => setShowPassword(!showPassword)}
-              className="text-xs text-muted-foreground flex items-center gap-1"
-            >
-              {showPassword ? (
-                <EyeOff className="size-4 text-primary" />
-              ) : (
-                <Eye className="size-4 text-primary" />
-              )}
-              {showPassword ? "Hide" : "Show"} Passwords
-            </button>
-            <button
-              onClick={handleUpdatePassword}
-              className="flex justify-center items-center space-x-3 p-3 rounded-lg glass-card hover:glow-on-hover animate-smooth group w-full"
-            >
-              {isUpdatingPassword ? (
-                <>
-                  <div
-                    className={`size-5 border-2 border-white border-t-transparent rounded-full animate-spin`}
-                  />
-                  <span>Updating Password...</span>
-                </>
-              ) : (
-                "Update Password"
-              )}
-            </button>
-
-            <button
-              onClick={handleLogout}
-              className={`my-6 flex items-center space-x-3 p-3 rounded-lg
-              glass-card hover:glow-on-hover text-destructive
-              hover:text-destructive-foreground group w-full`}
-            >
-              <LogOut className="size-5" />
-              <span>Logout</span>
-            </button>
-          </div>
         </div>
       </div>
     </>
