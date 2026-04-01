@@ -51,7 +51,7 @@ const ProfilePanel = () => {
     formData.append("currentPassword", currentPassword);
     formData.append("newPassword", newPassword);
     formData.append("confirmNewPassword", confirmNewPassword);
-    dispatch(updatePassword());
+    dispatch(updatePassword(formData));
   };
 
   if (!isAuthPopupOpen || !authUser) return null;
@@ -150,6 +150,13 @@ const ProfilePanel = () => {
               placeholder="Current password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
+              className="w-full p-2 rounded border border-border bg-secondary text-foreground"
+            />
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="New password"
+              value={confirmNewPassword}
+              onChange={(e) => setConfirmNewPassword(e.target.value)}
               className="w-full p-2 rounded border border-border bg-secondary text-foreground"
             />
             <input
