@@ -17,6 +17,7 @@ const ProfilePanel = () => {
     (state) => state.auth,
   );
 
+  const [showPassword, setShowPassword] = useState("");
   const [name, setName] = useState(authUser?.name || "");
   const [email, setEmail] = useState(authUser?.email || "");
   const [avatar, setAvatar] = useState(null);
@@ -89,7 +90,7 @@ const ProfilePanel = () => {
             <p className="text-muted-foreground">{authUser?.email}</p>
           </div>
 
-          {/* Profile update UI */}
+          {/* Profile update form */}
           {authUser && (
             <div className="space-y-4 mb-8">
               <h3 className="text-lg font-semibold text-primary">
@@ -118,15 +119,91 @@ const ProfilePanel = () => {
                   onChange={(e) => setAvatar(e.target.files[0])}
                   className="hidden"
                 />
-                <button
-                  onClick={handleUpdateProfile}
-                  className="flex justify-center items-center space-x-3 p-3 rounded-lg glass-card hover:glow-on-hover animate-smooth group w-full"
-                >
-                  {isUpdatingProfile ? <></> : <></>}
-                </button>
               </label>
+
+              <button
+                onClick={handleUpdateProfile}
+                className="flex justify-center items-center space-x-3 p-3 rounded-lg glass-card hover:glow-on-hover animate-smooth group w-full"
+              >
+                {isUpdatingProfile ? (
+                  <>
+                    <div
+                      className={`size-5 border-2 border-white border-t-transparent rounded-full
+                        animate-spin `}
+                    />
+                    <span>Updating Profie</span>
+                  </>
+                ) : (
+                  "Save changes"
+                )}
+              </button>
             </div>
           )}
+
+          {/* Update password form */}
+          <div className="space-y-4 mb-8">
+            <h3 className="text-lg font-semibold text-primary">
+              Update Password
+            </h3>
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Current password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              className="w-full p-2 rounded border border-border bg-secondary text-foreground"
+            />
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="New password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="w-full p-2 rounded border border-border bg-secondary text-foreground"
+            />
+            <button
+              onClick={() => setShowPassword(!showPassword)}
+              className="text-sm text-muted-foreground flex items-center gap-1"
+            >
+              {showPassword ? (
+                <EyeOff className="size-4 text-primary" />
+              ) : (
+                <Eye className="size-4 text-primary" />
+              )}
+              {showPassword ? "Hide" : "Show"} Passwords
+            </button>
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Confirm new password"
+              value={confirmNewPassword}
+              onChange={(e) => setConfirmNewPassword(e.target.value)}
+              className="w-full p-2 rounded border border-border bg-secondary text-foreground"
+            />
+            <button
+              onClick={handleUpdatePassword}
+              className="flex justify-center items-center space-x-3 p-3 rounded-lg glass-card hover:glow-on-hover animate-smooth group w-full"
+            >
+              {isUpdatingPassword ? (
+                <>
+                  <div
+                    className={`size-5 border-2 border-white border-t-transparent rounded-full
+                        animate-spin `}
+                  />
+                  <span>Updating password</span>
+                </>
+              ) : (
+                "Update password"
+              )}
+            </button>
+          </div>
+
+          <button
+            onClick={handleLogout}
+            className={`my-6 flex items-center space-x-3 p-3 rounded-lg
+            glass-card hover:glow-on-hover text-destructive
+            hover:text-destructive-foreground group w-full`}
+          >
+            <LogOut className="size-5" />
+            <span>Logout</span>
+          </button>
         </div>
       </div>
     </>
