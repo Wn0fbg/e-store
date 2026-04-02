@@ -22,7 +22,7 @@ router.post(
   authorizeRoles("Admin"),
   createProduct,
 );
-router.get("/products", fetchAllProducts);
+router.get("/", fetchAllProducts);
 router.get("/singleProduct/:productId", fetchSingleProduct);
 router.put("/post-new/review/:productId", isAuthenticated, postProductReview);
 router.delete("/delete/review/:productId".isAuthenticated, deleteReview);

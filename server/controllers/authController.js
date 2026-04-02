@@ -317,9 +317,9 @@ export const updateProfile = catchAsyncErrors(async (req, res, next) => {
     );
   }
 
-  req.status(200).json({
+  res.status(200).json({
     success: true,
-    message: "Profile updated successfuly",
+    message: "Profile updated successfully",
     user: user.rows[0],
   });
 });

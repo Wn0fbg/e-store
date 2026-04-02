@@ -147,13 +147,6 @@ const ProfilePanel = () => {
             </h3>
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="Current password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full p-2 rounded border border-border bg-secondary text-foreground"
-            />
-            <input
-              type={showPassword ? "text" : "password"}
               placeholder="New password"
               value={confirmNewPassword}
               onChange={(e) => setConfirmNewPassword(e.target.value)}
@@ -164,6 +157,13 @@ const ProfilePanel = () => {
               placeholder="New password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
+              className="w-full p-2 rounded border border-border bg-secondary text-foreground"
+            />
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Confirm new password"
+              value={confirmNewPassword}
+              onChange={(e) => setConfirmNewPassword(e.target.value)}
               className="w-full p-2 rounded border border-border bg-secondary text-foreground"
             />
             <button
@@ -177,13 +177,6 @@ const ProfilePanel = () => {
               )}
               {showPassword ? "Hide" : "Show"} Passwords
             </button>
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Confirm new password"
-              value={confirmNewPassword}
-              onChange={(e) => setConfirmNewPassword(e.target.value)}
-              className="w-full p-2 rounded border border-border bg-secondary text-foreground"
-            />
             <button
               onClick={handleUpdatePassword}
               className="flex justify-center items-center space-x-3 p-3 rounded-lg glass-card hover:glow-on-hover animate-smooth group w-full"
