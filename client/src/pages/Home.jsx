@@ -8,8 +8,9 @@ import { useSelector } from "react-redux";
 
 const Index = () => {
   const { topRatedProducts, newProducts } = useSelector(
-    (state) => state.product
+    (state) => state.product,
   );
+  
   return (
     <div className="min-h-screen">
       <HeroSlider />

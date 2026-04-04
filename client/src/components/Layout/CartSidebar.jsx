@@ -66,7 +66,7 @@ const CartSidebar = () => {
                 {cart &&
                   cart.map((item) => {
                     <div key={item.product.id} className="glass-card p-4">
-                      <div className="flex items-center space-x-4">
+                      <div className="flex items-start space-x-4">
                         <img
                           src={item.product.images[0].url}
                           alt={item.product.name}
@@ -79,44 +79,44 @@ const CartSidebar = () => {
                           <p className="text-primary font-semibold">
                             ${item.product.price}
                           </p>
-                        </div>
 
-                        {/* Quantity controls */}
-                        <div className="flex items-center space-x-3 mt-2">
-                          <button
-                            className="p-1 rounded glass-card hover:glow-on-hover animate-smooth"
-                            onClick={() => {
-                              updateQuantity(
-                                item.product.id,
-                                item.quantity - 1,
-                              );
-                            }}
-                          >
-                            <Minus className="size-4 text-primary" />
-                          </button>
-                          <span className="w-8 text-primary font-semibold">
-                            {item.quantity}
-                          </span>
-                          <button
-                            className="p-1 rounded glass-card hover:glow-on-hover animate-smooth"
-                            onClick={() => {
-                              updateQuantity(
-                                item.product.id,
-                                item.quantity + 1,
-                              );
-                            }}
-                          >
-                            <Plus className="size-4 text-primary" />
-                          </button>
+                          {/* Quantity controls */}
+                          <div className="flex items-center space-x-2 mt-2">
+                            <button
+                              className="p-1 rounded glass-card hover:glow-on-hover animate-smooth"
+                              onClick={() => {
+                                updateQuantity(
+                                  item.product.id,
+                                  item.quantity - 1,
+                                );
+                              }}
+                            >
+                              <Minus className="size-4" />
+                            </button>
+                            <span className="w-8 text-primary font-semibold">
+                              {item.quantity}
+                            </span>
+                            <button
+                              className="p-1 rounded glass-card hover:glow-on-hover animate-smooth"
+                              onClick={() => {
+                                updateQuantity(
+                                  item.product.id,
+                                  item.quantity + 1,
+                                );
+                              }}
+                            >
+                              <Plus className="size-4" />
+                            </button>
 
-                          <button
-                            className="p-1 rounded glass-card hover:glow-on-hover animate-smooth ml-2 text-destructive"
-                            onClick={() => {
-                              dispatch(removeFromCart(item.product.id));
-                            }}
-                          >
-                            <Trash2 className="size-4 text-destructive-foreground" />
-                          </button>
+                            <button
+                              className="p-1 rounded glass-card hover:glow-on-hover animate-smooth ml-2 text-destructive"
+                              onClick={() => {
+                                dispatch(removeFromCart(item.product.id));
+                              }}
+                            >
+                              <Trash2 className="size-4" />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>;
@@ -139,7 +139,7 @@ const CartSidebar = () => {
         <Link
           to={"/cart"}
           onClick={() => dispatch(toggleCart())}
-          className="w-full block text-center gradient-primary text-primary-foreground rounded-lg hover:glow-on-hover animate-smooth font-semibold"
+          className="w-full py-3 block text-center gradient-primary text-primary-foreground rounded-lg hover:glow-on-hover animate-smooth font-semibold"
         >
           View Cart & Checkout
         </Link>

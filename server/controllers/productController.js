@@ -148,7 +148,7 @@ export const fetchAllProducts = catchAsyncErrors(async (req, res, next) => {
 
   // FETCH WITH REVIEWS (correct JOIN)
   const query = `
-    SELECT p.*, COUNT(r.id) AS reviews_count
+    SELECT p.*, COUNT(r.id) AS review_count
     FROM products p
     LEFT JOIN reviews r ON p.id = r.product_id
     ${whereClause}
