@@ -149,3 +149,5 @@ const CartSidebar = () => {
 };
 
 export default CartSidebar;
+
+// name, stock, description, category, price, images
