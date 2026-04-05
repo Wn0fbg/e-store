@@ -8,7 +8,6 @@ import { createTempToken } from "../utils/createToken.js";
 import { generateResetPasswordToken } from "../utils/generateResetPasswordToken.js";
 import { generateEmailTemplate } from "../utils/generateForgotPasswordEmailTemplate.js";
 import { sendEmail } from "../utils/sendEmail.js";
-import { v2 as cloudinary } from "cloudinary";
 
 export const register = catchAsyncErrors(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -286,22 +285,70 @@ export const updateProfile = catchAsyncErrors(async (req, res, next) => {
   if (req.files && req.files.avatar) {
     const { avatar } = req.files;
 
-    if (req.user?.avatar?.public_id) {
-      await cloudinary.uploader.destroy(req.user.avatar.public_id);
+    // Удаляем старый аватар локально, если нужно -- реализуйте по вашей логике
+    if (req.user?.avatar?.path) {
+      // Пример: удалить файл старого аватара
+      const fs = require("fs");
+      const pathOld = req.user.avatar.path;
+      fs.access(pathOld, fs.constants.F_OK, (err) => {
+        if (!err) {
+          fs.unlink(pathOld, (errUnlink) => {
+            if (errUnlink)
+              console.error("Failed to delete old avatar:", errUnlink);
+          });
+        }
+      });
     }
 
-    const newProfileImage = await cloudinary.uploader.upload(
-      avatar.tempFilePath,
-      {
-        folder: "Eccomerce_Avatars",
-        width: 150,
-        crop: "scale",
-      },
-    );
-    avatarData = {
-      public_id: newProfileImage.public_id,
-      url: newProfileImage.secure_url,
-    };
+    // Сохраняем новый файл аватара
+    // Предположим, что вы используете multer и у вас есть папка uploads/Avatars
+    // avatar.tempFilePath или avatar.path может быть доступен в зависимости от вашей конфигурации
+    // Перемещаем файл в целевую директорию и сохраняем путь в БД
+    try {
+      const path = require("path");
+      const fs = require("fs");
+      const uploadsDir = path.resolve(__dirname, "../../uploads/Avatars"); // скорректируйте путь под проект
+
+      // Убедитесь, что директория существует
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+
+      // Генерируем уникальное имя файла
+      const ext = path.extname(avatar.name || avatar.filename || "");
+      const filename = `avatar_${Date.now()}${ext}`;
+      const destPath = path.join(uploadsDir, filename);
+
+      // Перемещаем файл в целевую директорию
+      // В зависимости от вашей реализации, можно использовать mv/rename или поток
+      // Ниже пример через mv (если вы используете express-fileupload):
+      if (avatar.mv) {
+        await new Promise((resolve, reject) => {
+          avatar.mv(destPath, (err) => {
+            if (err) return reject(err);
+            resolve();
+          });
+        });
+      } else {
+        // Если используете другой способ (например, файл уже в tempFilePath)
+        const tempPath = avatar.tempFilePath || avatar.path;
+        await new Promise((resolve, reject) => {
+          fs.copyFile(tempPath, destPath, (err) => {
+            if (err) return reject(err);
+            // если нужен удалить временный файл
+            // fs.unlink(tempPath, () => {});
+            resolve();
+          });
+        });
+      }
+
+      avatarData = {
+        path: destPath, // путь на диске
+        url: `/uploads/Avatars/${filename}`, // путь, который можно отдавать клиенту
+      };
+    } catch (err) {
+      return next(new ErrorHandler("Failed to process avatar image", 500));
+    }
   }
 
   let user;
@@ -313,7 +360,7 @@ export const updateProfile = catchAsyncErrors(async (req, res, next) => {
   } else {
     user = await database.query(
       "UPDATE users SET name = $1, email = $2, avatar = $3 WHERE id = $4 RETURNING *",
-      [name, email, avatarData, req.user.id],
+      [name, email, avatarData.url, req.user.id],
     );
   }
 

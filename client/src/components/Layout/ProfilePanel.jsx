@@ -148,8 +148,8 @@ const ProfilePanel = () => {
             <input
               type={showPassword ? "text" : "password"}
               placeholder="New password"
-              value={confirmNewPassword}
-              onChange={(e) => setConfirmNewPassword(e.target.value)}
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
               className="w-full p-2 rounded border border-border bg-secondary text-foreground"
             />
             <input
