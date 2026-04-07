@@ -74,7 +74,7 @@ export const createProduct = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const fetchAllProducts = catchAsyncErrors(async (req, res, next) => {
-  const { availability, price, category, ratings, search } = req.query;
+  const { availability, price, category, rating, search } = req.query;
 
   const page = parseInt(req.query.page) || 1;
   const limit = 10;
@@ -110,10 +110,10 @@ export const fetchAllProducts = catchAsyncErrors(async (req, res, next) => {
     index++;
   }
 
-  // Filter by ratings
-  if (ratings) {
-    conditionals.push(`ratings >= $${index}`);
-    values.push(ratings);
+  // Filter by rating
+  if (rating) {
+    conditionals.push(`rating >= $${index}`);
+    values.push(rating);
     index++;
   }
 
@@ -173,13 +173,13 @@ export const fetchAllProducts = catchAsyncErrors(async (req, res, next) => {
 
   const newProductsResult = await database.query(newProductsQuery);
 
-  // Query for fetching top ratings products (ratings >= 4.5)
+  // Query for fetching top rating products (rating >= 4.5)
   const topRatedQuery = `
     SELECT p.*,
     COUNT(r.id) AS review_count
     FROM products p
     LEFT JOIN reviews r ON p.id = r.product_id
-    WHERE p.ratings >= 4.5
+    WHERE p.rating >= 4.5
     GROUP BY p.id
     ORDER BY p.created_at DESC, p.created_at DESC
     LIMIT 8
@@ -270,7 +270,7 @@ export const fetchSingleProduct = catchAsyncErrors(async (req, res, next) => {
       json_agg(
         json_build_object(
            'review_id', r.id,
-           'ratings', r.ratings,
+           'rating', r.rating,
            'comment', r.comment,
            'reviewer', json_build_object(
             'id', u.id,
@@ -298,10 +298,10 @@ export const fetchSingleProduct = catchAsyncErrors(async (req, res, next) => {
 
 export const postProductReview = catchAsyncErrors(async (req, res, next) => {
   const { productId } = req.params;
-  const { ratings, comment } = req.body;
+  const { rating, comment } = req.body;
 
-  if (!ratings || !comment) {
-    return next(new ErrorHandler("Please provide ratings and comment.", 400));
+  if (!rating || !comment) {
+    return next(new ErrorHandler("Please provide rating and comment.", 400));
   }
 
   const purchashedCkeckQuery = `
@@ -346,28 +346,28 @@ export const postProductReview = catchAsyncErrors(async (req, res, next) => {
   if (isAlreadyReviewed.rows.length > 0) {
     review = await database.query(
       `UPDATE reviews
-       SET ratings = $1, comment = $2
+       SET rating = $1, comment = $2
        WHERE product_id = $3 AND user_id = $4
        RETURNING *`,
-      [ratings, comment, productId, req.user.id],
+      [rating, comment, productId, req.user.id],
     );
   } else {
     review = await database.query(
-      `INSERT INTO reviews (product_id, user_id, ratings, comment)
+      `INSERT INTO reviews (product_id, user_id, rating, comment)
      VALUES ($1, $2, $3, $4)
      RETURNING *`,
-      [productId, req.user.id, ratings, comment],
+      [productId, req.user.id, rating, comment],
     );
   }
 
   const allReviews = await database.query(
-    `SELECT AVG(ratings) AS avg_rating FROM reviews WHERE product_id = $1`,
+    `SELECT AVG(rating) AS avg_rating FROM reviews WHERE product_id = $1`,
     [productId],
   );
   const newAvgRating = allReviews.rows[0].avg_rating;
 
   const updateProduct = await database.query(
-    `UPDATE products SET ratings = $1 WHERE id = $2 RETURNING *`,
+    `UPDATE products SET rating = $1 WHERE id = $2 RETURNING *`,
     [newAvgRating, productId],
   );
 
@@ -391,13 +391,13 @@ export const deleteReview = catchAsyncErrors(async (req, res, next) => {
   }
 
   const allReviews = await database.query(
-    `SELECT AVG(ratings) AS avg_rating FROM reviews WHERE product_id = $1`,
+    `SELECT AVG(rating) AS avg_rating FROM reviews WHERE product_id = $1`,
     [productId],
   );
   const newAvgRating = allReviews.rows[0].avg_rating;
 
   const updateProduct = await database.query(
-    `UPDATE products SET ratings = $1 WHERE id = $2 RETURNING *`,
+    `UPDATE products SET rating = $1 WHERE id = $2 RETURNING *`,
     [newAvgRating, productId],
   );
 
