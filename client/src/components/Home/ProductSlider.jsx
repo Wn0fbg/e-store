@@ -59,7 +59,8 @@ const ProductSlider = ({ title, products }) => {
                 {/* Product image */}
                 <div className="relative overflow-hidden rounded-lg mb-4">
                   <img
-                    src={product.images[0].url}
+                    src={"/avatar-holder.avif"}
+                    // src={product.images[0].url}
                     alt={product.name}
                     className="w-full h-48 object-contain group-hover:scale-110 transition-transform duration-300"
                   />
@@ -129,7 +130,7 @@ const ProductSlider = ({ title, products }) => {
                   {/* Product availability */}
                   <div>
                     <span
-                      className={`text-xs px-2 py-4 rounded ${
+                      className={`px-2 py-2 pt-1 pb-1 rounded ${
                         product.stock > 5
                           ? "bg-green-500/20 text-gray-400"
                           : product.stock > 0
