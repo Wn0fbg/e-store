@@ -1,8 +1,11 @@
 import { X, Plus, Minus, Trash2, Space } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { removeFromCart } from "../../store/slices/cartSlice";
-import { toggleCart } from "../../store/slices/popupSlice";
+import {
+  removeFromCart,
+  updateCartQuantity,
+} from "../../store/slices/cartSlice";
+import { toggleCart, toggleSidebar } from "../../store/slices/popupSlice";
 
 const CartSidebar = () => {
   const dispatch = useDispatch();
@@ -13,7 +16,7 @@ const CartSidebar = () => {
     if (quantity <= 0) {
       dispatch(removeFromCart(id));
     } else {
-      dispatch(updateQuantity({ id, quantity }));
+      dispatch(updateCartQuantity({ id, quantity }));
     }
   };
 
@@ -29,16 +32,16 @@ const CartSidebar = () => {
 
   return (
     <>
-      {/* Overlay  */}
+      {/* Overlay */}
       <div
         className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-        onClick={() => dispatch(toggleCart())}
+        onClick={() => dispatch(toggleSidebar())}
       />
 
       {/* Cart sidebar */}
       <div className="fixed right-0 top-0 h-full w-96 z-50 glass-panel animate-slide-in-right overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-[hsla(var(--glass-border))]">
-          <h2 className="text-xl font-semibold text-primary">Shopping Cart</h2>
+          <h2 className="text-xl font-semibold text-primary">Shipping cart</h2>
           <button
             onClick={() => dispatch(toggleCart())}
             className="p-2 rounded-lg glass-card hover:glow-on-hover animate-smooth"
@@ -49,14 +52,15 @@ const CartSidebar = () => {
 
         <div className="p-6">
           {cart && cart.length === 0 ? (
-            <div className="text-center py-12">
+            <div className="text-center py-4">
               <p className="text-muted-foreground">You cart is empty.</p>
               <Link
                 to={"/product"}
                 onClick={() => dispatch(toggleCart())}
-                className="inline-block mt-4 px-6 py-2 gradient-primary text-primary-foreground rounded-lg hover:glow-on-hover animate-smooth"
+                className={`inline-block mt-4 px-6 py-2 gradient-primary 
+                text-primary-foreground rounded-lg hover:glow-on-hover animate-smooth`}
               >
-                Browser Products
+                Browse products
               </Link>
             </div>
           ) : (
@@ -65,23 +69,25 @@ const CartSidebar = () => {
               <div className="space-y-4 mb-6">
                 {cart &&
                   cart.map((item) => {
-                    <div key={item.product.id} className="glass-card p-4">
-                      <div className="flex items-start space-x-4">
-                        <img
-                          src={item.product.images[0].url}
-                          alt={item.product.name}
-                          className="size-16 object-cover rounded-lg"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-foreground truncate">
-                            {item.product.name}
-                          </h3>
-                          <p className="text-primary font-semibold">
-                            ${item.product.price}
-                          </p>
+                    return (
+                      <div key={item.product.id} className="glass-card p-4">
+                        <div className="flex items-center space-x-4">
+                          <img
+                            src={"/avatar-holder.avif"}
+                            alt={item.product.name}
+                            className="size-16 object-cover rounded-lg"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-foreground truncate">
+                              {item.product.name}
+                            </h3>
+                            <p className="text-primary font-semibold">
+                              ${item.product.price}
+                            </p>
+                          </div>
 
                           {/* Quantity controls */}
-                          <div className="flex items-center space-x-2 mt-2">
+                          <div className="flex items-center space-x-3 mt-2">
                             <button
                               className="p-1 rounded glass-card hover:glow-on-hover animate-smooth"
                               onClick={() => {
@@ -91,9 +97,9 @@ const CartSidebar = () => {
                                 );
                               }}
                             >
-                              <Minus className="size-4" />
+                              <Minus className="size-4 text-primary" />
                             </button>
-                            <span className="w-8 text-primary font-semibold">
+                            <span className="w-8 text-center font-semibold">
                               {item.quantity}
                             </span>
                             <button
@@ -105,7 +111,7 @@ const CartSidebar = () => {
                                 );
                               }}
                             >
-                              <Plus className="size-4" />
+                              <Plus className="size-4 text-primary" />
                             </button>
 
                             <button
@@ -114,40 +120,39 @@ const CartSidebar = () => {
                                 dispatch(removeFromCart(item.product.id));
                               }}
                             >
-                              <Trash2 className="size-4" />
+                              <Trash2 className="size-4 text-destructive-foreground" />
                             </button>
                           </div>
                         </div>
                       </div>
-                    </div>;
+                    );
                   })}
+              </div>
+
+              {/* Total */}
+              <div className="border-t border-[hsla(var(--glass-border))] pt-4">
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-lg font-semibold">Total:</span>
+                  <span className="text-xl font-bold text-primary">
+                    ${total.toFixed(2)}
+                  </span>
+                </div>
+
+                <Link
+                  to={"/cart"}
+                  onClick={() => dispatch(toggleCart())}
+                  className={`w-full block text-center gradient-primary text-primary-foreground
+                  rounded-lg hover:glow-on-hover animate-smooth font-semibold`}
+                >
+                  View Cart & Checkout
+                </Link>
               </div>
             </>
           )}
         </div>
-      </div>
-
-      {/* Total */}
-      <div className="border-t border-[hsla(var(--glass-border))] pt-4">
-        <div className="flex justify-between items-center mb-4">
-          <span className="text-lg font-semibold">Total:</span>
-          <span className="text-xl font-bold text-primary">
-            ${total.toFixed(2)}
-          </span>
-        </div>
-
-        <Link
-          to={"/cart"}
-          onClick={() => dispatch(toggleCart())}
-          className="w-full py-3 block text-center gradient-primary text-primary-foreground rounded-lg hover:glow-on-hover animate-smooth font-semibold"
-        >
-          View Cart & Checkout
-        </Link>
       </div>
     </>
   );
 };
 
 export default CartSidebar;
-
-// name, stock, description, category, price, images
