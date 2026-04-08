@@ -28,6 +28,8 @@ import { getUser } from "./store/slices/authSlice";
 import { Loader } from "lucide-react";
 import { fetchAllProducts } from "./store/slices/productSlice";
 
+// Todo: исправить баг с изображение товаров ProductSlider.jsx
+
 const App = () => {
   const { authUser, isCheckingAuth } = useSelector((state) => state.auth);
   const dispatch = useDispatch();

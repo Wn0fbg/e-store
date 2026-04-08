@@ -16,7 +16,7 @@ const Navbar = () => {
   let cartItemsCount = 0;
 
   if (cart) {
-    cartItemsCount = cart.reduce((total, item) => total + quantity, 0);
+    cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0);
   }
 
   return (

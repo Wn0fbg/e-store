@@ -20,7 +20,7 @@ const CartSidebar = () => {
   let total = 0;
   if (cart) {
     total = cart.reduce(
-      (sum, item) => sum + item.product.price * item.product.quantity,
+      (sum, item) => sum + item.product.price * item.quantity,
       0,
     );
   }
