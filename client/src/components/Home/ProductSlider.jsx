@@ -21,7 +21,6 @@ const ProductSlider = ({ title, products }) => {
   const handleAddToCart = (product, e) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Product received", product);
     dispatch(addToCart({ product, quantity: 1 }));
   };
 

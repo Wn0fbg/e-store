@@ -39,7 +39,6 @@ const App = () => {
   }, [getUser]);
 
   useEffect(() => {
-    dispatch(fetchAllProducts());
     dispatch(
       fetchAllProducts({
         availability: "",
