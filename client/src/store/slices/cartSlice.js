@@ -31,7 +31,7 @@ const cartSlice = createSlice({
         (item) => item.product.id === action.payload.id,
       );
       if (item) {
-        item.quantity += action.payload.quantity;
+        item.quantity = action.payload.quantity;
       }
     },
 
