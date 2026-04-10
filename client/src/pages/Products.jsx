@@ -41,9 +41,75 @@ const Products = () => {
         page: currentPage,
       }),
     );
-  }, []);
+  }, [
+    dispatch,
+    selectedCategory,
+    priceRange,
+    searchQuery,
+    selectedRating,
+    availability,
+    currentPage,
+  ]);
 
-  return <></>;
+  const totalPages = Math.ceil(totalProducts / 10);
+
+  return (
+    <>
+      <div className="min-h-screen pt-20">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Mobile filter toggle */}
+            <button
+              onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
+              className={`lg:hidden mb-4 p-3 glass-card hover:glow-on-hover
+              animate-smooth flex items-center space-x-2`}
+            >
+              <Filter className="size-5" />
+              <span>Filters</span>
+            </button>
+
+            {/* Sidebar filters */}
+            <div
+              className={`lg:block ${
+                isMobileFilterOpen ? "block" : "hidden"
+              } w-full lg:w-80 space-x-6`}
+            >
+              <div className="glass-panel">
+                <h2 className="text-xl font-semibold text-foreground mb-6">
+                  Filters
+                </h2>
+
+                {/* Price range */}
+                <div className="mb-6">
+                  <h3 className="rext-lg font-medium text-foreground mb-3">
+                    Price range
+                  </h3>
+                  <div className="space-y-2">
+                    <input
+                      type="range"
+                      min="0"
+                      max="10000"
+                      value={priceRange[1]}
+                      onChange={(e) =>
+                        setPriceRange([priceRange[0], parseInt(e.target.value)])
+                      }
+                      className="w-full"
+                    />
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>${priceRange[0]}</span>
+                      <span>${priceRange[1]}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Rating */}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default Products;
