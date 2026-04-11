@@ -103,7 +103,154 @@ const Products = () => {
                 </div>
 
                 {/* Rating */}
+                <div className="mb-6">
+                  <h3 className="rext-lg font-medium text-foreground mb-3">
+                    Rating
+                  </h3>
+                  <div className="space-y-2">
+                    {[4, 3, 2, 1].map((rating) => {
+                      return (
+                        <button
+                          key={rating}
+                          onClick={() =>
+                            setSelectedCategory(
+                              selectedRating === rating ? 0 : rating,
+                            )
+                          }
+                          className={`flex items-center space-x-2 w-full p-2 rounded ${
+                            selectedRating === rating
+                              ? "bg-primary/20"
+                              : "hover:bg-secondary"
+                          } `}
+                        >
+                          {[...Array(5)].map((_, i) => {
+                            return (
+                              <Star
+                                key={i}
+                                className={`size-4 ${
+                                  i < rating
+                                    ? "text-yellow-400 fill-current"
+                                    : "text-gray-300"
+                                }`}
+                              />
+                            );
+                          })}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Availability */}
+                <div className="mb-6">
+                  <h3 className="rext-lg font-medium text-foreground mb-3">
+                    Availability
+                  </h3>
+                  <div className="space-y-2">
+                    {["in-stock", "limited", "out-of-stock"].map((status) => {
+                      return (
+                        <button
+                          key={status}
+                          onClick={() =>
+                            setAvailability(
+                              availability === status ? "" : status,
+                            )
+                          }
+                          className={`w-full p-2 text-left rounded ${
+                            availability === status
+                              ? "bg-primary/20"
+                              : "hover:bg-secondary"
+                          }`}
+                        >
+                          {status === "in-stock"
+                            ? "In stock"
+                            : status === "limited"
+                              ? "Limited stock"
+                              : "Out of stock"}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Category */}
+                <div className="mb-6">
+                  <h3 className="rext-lg font-medium text-foreground mb-3">
+                    Category
+                  </h3>
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => setSelectedCategory("")}
+                      className={`w-full p-2 text-left rounded ${
+                        !selectedCategory
+                          ? "bg-primary/20"
+                          : "hover:bg-secondary"
+                      }`}
+                    >
+                      All categories
+                    </button>
+                    {categories.map((category) => {
+                      <button
+                        key={category.name}
+                        onClick={() => setSelectedCategory(category.name)}
+                        className={`w-full p-2 text-left rounded ${
+                          selectedCategory === category.name
+                            ? "bg-primary/20"
+                            : "hover:bg-secondary"
+                        }`}
+                      >
+                        {category.name}
+                      </button>;
+                    })}
+                  </div>
+                </div>
               </div>
+            </div>
+
+            {/* Main content */}
+            <div className="flex-1">
+              {/* Search bar */}
+              <div className="mb-8 flex max-[440px]:flex-col items-center gap-2">
+                <div className="relative w-[-webkit-fill-available]">
+                  <Search
+                    className={`absolute left-3 top-1/2 transform 
+                      -translate-y-1/2 size-5 text-muted-foreground`}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Search Products..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className={`w-full pl-10 pr-4 py-3 bg-secondary border border-border
+                        rounded-lg focus:outline-none text-foreground placeholder-muted-foreground`}
+                  />
+                </div>
+                <button></button>
+              </div>
+
+              {/* Products grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                {products.map((product) => {
+                  <ProductCard key={product.id} product={product} />;
+                })}
+              </div>
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              )}
+
+              {/* No results */}
+              {products.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground text-lg">
+                    No products found matching your criteria.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
