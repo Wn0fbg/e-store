@@ -7,6 +7,8 @@ import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchAllProducts } from "../store/slices/productSlice";
 
+// src={"/avatar-holder.avif"}
+
 const Products = () => {
   const { products, totalProducts } = useSelector((state) => state.product);
 
@@ -121,7 +123,7 @@ const Products = () => {
                             selectedRating === rating
                               ? "bg-primary/20"
                               : "hover:bg-secondary"
-                          } `}
+                          }`}
                         >
                           {[...Array(5)].map((_, i) => {
                             return (
@@ -163,7 +165,7 @@ const Products = () => {
                           }`}
                         >
                           {status === "in-stock"
-                            ? "In stock"
+                            ? "In Stock"
                             : status === "limited"
                               ? "Limited stock"
                               : "Out of stock"}
@@ -214,26 +216,26 @@ const Products = () => {
                 <div className="relative w-[-webkit-fill-available]">
                   <Search
                     className={`absolute left-3 top-1/2 transform 
-                      -translate-y-1/2 size-5 text-muted-foreground`}
+                    -translate-y-1/2 size-5 text-muted-foreground`}
                   />
                   <input
                     type="text"
-                    placeholder="Search Products..."
+                    placeholder="Searc products.."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className={`w-full pl-10 pr-4 py-3 bg-secondary border border-border
-                        rounded-lg focus:outline-none text-foreground placeholder-muted-foreground`}
+                    rounded-lg focus:outline-none text-foreground placeholder-muted-foreground`}
                   />
                 </div>
-                <button></button>
               </div>
 
               {/* Products grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 {products.map((product) => {
-                  <ProductCard key={product.id} product={product} />;
+                  return <ProductCard key={product.id} product={product} />;
                 })}
               </div>
+
               {/* Pagination */}
               {totalPages > 1 && (
                 <Pagination
@@ -245,8 +247,8 @@ const Products = () => {
 
               {/* No results */}
               {products.length === 0 && (
-                <div className="text-center py-12">
-                  <p className="text-muted-foreground text-lg">
+                <div className="texx-center py-12">
+                  <p className="text-muted-foreground">
                     No products found matching your criteria.
                   </p>
                 </div>

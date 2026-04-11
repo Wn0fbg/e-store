@@ -17,7 +17,7 @@ const ProductCard = ({ product }) => {
       <Link
         key={product.id}
         to={`/product/${product.id}`}
-        className="glass-card hover:glow-on-hover animate-smooth group"
+        className="flex-shrink-0 w-80 glass-card hover:glow-on-hover animate-smooth group"
       >
         {/* Product image */}
         <div className="relative overflow-hidden rounded-lg mb-4">
