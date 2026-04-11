@@ -7,7 +7,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     const maxVisible = 5;
 
     if (totalPages <= maxVisible) {
-      for (let i = 0; i <= totalPages; i++) {
+      for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
@@ -20,14 +20,12 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       } else if (currentPage >= totalPages - 2) {
         pages.push(1);
         pages.push("...");
-
         for (let i = totalPages - 3; i <= totalPages; i++) {
           pages.push(i);
         }
       } else {
         pages.push(1);
         pages.push("...");
-
         for (let i = currentPage - 1; i <= currentPage + 1; i++) {
           pages.push(i);
         }
@@ -45,8 +43,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         <button
           disabled={currentPage === 1}
           onClick={() => onPageChange(currentPage - 1)}
-          className={`p-2 glass-card hover:glow-on-hover animate-smooth disabled:opacity-50
-          disabled:cursor-not-allowed`}
+          className="p-2 glass-card hover:glow-on-hover animate-smooth disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ChevronLeft className="size-5" />
         </button>
@@ -73,10 +70,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
         {/* Next button */}
         <button
-          disabled={currentPage === 1}
+          disabled={currentPage === totalPages}
           onClick={() => onPageChange(currentPage + 1)}
-          className={`p-2 glass-card hover:glow-on-hover animate-smooth disabled:opacity-50
-          disabled:cursor-not-allowed`}
+          className="p-2 glass-card hover:glow-on-hover animate-smooth disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ChevronRight className="size-5" />
         </button>

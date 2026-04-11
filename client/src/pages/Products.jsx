@@ -192,17 +192,19 @@ const Products = () => {
                       All categories
                     </button>
                     {categories.map((category) => {
-                      <button
-                        key={category.name}
-                        onClick={() => setSelectedCategory(category.name)}
-                        className={`w-full p-2 text-left rounded ${
-                          selectedCategory === category.name
-                            ? "bg-primary/20"
-                            : "hover:bg-secondary"
-                        }`}
-                      >
-                        {category.name}
-                      </button>;
+                      return (
+                        <button
+                          key={category.id}
+                          onClick={() => setSelectedCategory(category.name)}
+                          className={`w-full p-2 text-left rounded ${
+                            selectedCategory === category.name
+                              ? "bg-primary/20"
+                              : "hover:bg-secondary"
+                          }`}
+                        >
+                          {category.name}
+                        </button>
+                      );
                     })}
                   </div>
                 </div>
@@ -247,7 +249,7 @@ const Products = () => {
 
               {/* No results */}
               {products.length === 0 && (
-                <div className="texx-center py-12">
+                <div className="text-center py-12">
                   <p className="text-muted-foreground">
                     No products found matching your criteria.
                   </p>
