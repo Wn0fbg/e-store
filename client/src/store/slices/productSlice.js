@@ -39,7 +39,10 @@ export const fetchProductDetails = createAsyncThunk(
   "product/singleProduct",
   async (id, thunkAPI) => {
     try {
+      console.log("Product fetched details");
+      console.log(id);
       const res = await axiosInstance.get(`product/singleProduct/${id}`);
+      console.log(res);
       return res.data.product;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -121,7 +124,7 @@ const productSlice = createSlice({
       .addCase(fetchProductDetails.fulfilled, (state, action) => {
         state.loading = false;
         state.productDetails = action.payload;
-        state.productDetails = action.payload.reviews;
+        state.productReviews = action.payload.reviews;
       })
       .addCase(fetchProductDetails.rejected, (state) => {
         state.loading = false;
