@@ -52,7 +52,7 @@ const ReviewsContainer = ({ product, productReviews }) => {
           <button
             type="submit"
             disabled={isPostingReview}
-            className={`px-6 py-2 rounded-lg bg-primary text-white font-semibold 
+            className={`px-6 py-2 rounded-lg bg-primary text-primary-foreground font-semibold 
             hover:glow-on-hover animate-smooth disabled:opacity-50`}
           >
             {isPostingReview ? "Submitting" : "Submit review"}
