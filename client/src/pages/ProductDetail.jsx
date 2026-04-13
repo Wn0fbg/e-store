@@ -141,6 +141,71 @@ const ProductDetail = () => {
                     ({productReviews?.length}) reviews
                   </span>
                 </div>
+                <div className="flex items-center space-x-4 mb-6">
+                  <span className="text-4xl font-bold text-primary">
+                    ${product.price}
+                  </span>
+                </div>
+                <div className="flex items-center space-x-4 mb-6">
+                  <span className="text-muted-foreground">
+                    Category: {product.category}
+                  </span>
+                  <span
+                    className={`px-3 py-1 rounded text-xs ${
+                      product.stock > 5
+                        ? "bg-green-500/20 text-green-400"
+                        : product.stock > 0
+                          ? "bg-yellow-500/20 text-yellow-400"
+                          : "bg-red-500/20 text-red-400"
+                    }`}
+                  >
+                    {product.stock > 5
+                      ? "In Stock"
+                      : product.stock > 0
+                        ? "Limited stock"
+                        : "Out of stock"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="glass-panel">
+              <div className="flex border-b border=[hsla(var(--glass-card))]">
+                {["description", "reviews"].map((tab) => {
+                  return (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={`px-6 py-4 font-medium capitalize transition-all ${
+                        activeTab === tab
+                          ? "text-primary border-b-2 border-primary"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="p-6">
+                {activeTab === "description" && (
+                  <div>
+                    <h3 className="text-xl font-semibold text-foreground mb-4">
+                      Product Description
+                    </h3>
+                    <p className="text-muted-foreground loading-relaxed">
+                      {product.description}
+                    </p>
+                  </div>
+                )}
+                {activeTab === "reviews" && (
+                  <>
+                    <ReviewsContainer
+                      product={product}
+                      productReviews={productReviews}
+                    />
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -127,7 +127,7 @@ const ReviewsContainer = ({ product, productReviews }) => {
         </div>
       ) : (
         <p className="text-muted-foreground">
-          No review yry. Be the first one to review this product
+          No review you. Be the first one to review this product
         </p>
       )}
     </>
