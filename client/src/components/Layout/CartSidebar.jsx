@@ -95,6 +95,7 @@ const CartSidebar = () => {
                                     item.quantity - 1,
                                   );
                                 }}
+                                disabled={item.quantity === 1}
                               >
                                 <Minus className="size-4" />
                               </button>
