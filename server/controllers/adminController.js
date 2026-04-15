@@ -88,7 +88,7 @@ export const dashboardStats = catchAsyncErrors(async (req, res, next) => {
     Processing: 0,
     Shipped: 0,
     Delivered: 0,
-    Canceled: 0,
+    Cancelled: 0,
   };
 
   orderStatusCountsQuery.rows.forEach((row) => {
