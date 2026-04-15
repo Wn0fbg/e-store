@@ -46,9 +46,31 @@ const orderSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchMyOrders.pending, (state) => {});
+    builder
+      .addCase(fetchMyOrders.pending, (state) => {
+        state.fetchingOrders = true;
+      })
+      .addCase(fetchMyOrders.fulfilled, (state, action) => {
+        state.fetchingOrders = false;
+        state.myOrders = action.payload;
+      })
+      .addCase(fetchMyOrders.rejected, (state) => {
+        state.fetchingOrders = false;
+      })
+      .addCase(placeOrder.pending, (state) => {
+        state.placingOrder = true;
+      })
+      .addCase(placeOrder.fulfilled, (state, action) => {
+        state.placingOrder = false;
+        state.finalPrice = action.payload.total_price;
+        state.paymentIntent = action.payload.paymentIntent;
+        state.orderStep = 2;
+      })
+      .addCase(placeOrder.rejected, (state) => {
+        state.placingOrder = false;
+      });
   },
 });
 
 export default orderSlice.reducer;
-export const {} = orderSlice.actions;
+export const { toggleOrderStep } = orderSlice.actions;
