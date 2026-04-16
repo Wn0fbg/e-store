@@ -68,7 +68,7 @@ const Payment = () => {
           </p>
           <Link
             to={"/products"}
-            className={`inline-flex items-center space-x-2 px-6 py-3 rounded-lg  text-primary-foreground 
+            className={`inline-flex items-center space-x-2 px-6 py-3 rounded-lg  text-primary-foreground
             gradient-primary hover:glow-on-hover animate-smooth font-semibold`}
           >
             Browse Products
@@ -158,7 +158,6 @@ const Payment = () => {
                         <input
                           type="text"
                           required
-                          value={shippingDetails.fullName}
                           onChange={(e) => {
                             setShippingDetails({
                               ...shippingDetails,
@@ -179,7 +178,7 @@ const Payment = () => {
                           onChange={(e) => {
                             setShippingDetails({
                               ...shippingDetails,
-                              state: e.targer.value,
+                              state: e.target.value,
                             });
                           }}
                           className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-foreground"
@@ -210,7 +209,6 @@ const Payment = () => {
                         <input
                           type="tel"
                           required
-                          value={shippingDetails.phone}
                           onChange={(e) => {
                             setShippingDetails({
                               ...shippingDetails,
@@ -230,7 +228,6 @@ const Payment = () => {
                         <input
                           type="text"
                           required
-                          value={shippingDetails.address}
                           onChange={(e) => {
                             setShippingDetails({
                               ...shippingDetails,
@@ -250,7 +247,6 @@ const Payment = () => {
                         <input
                           type="text"
                           required
-                          value={shippingDetails.city}
                           onChange={(e) => {
                             setShippingDetails({
                               ...shippingDetails,
@@ -268,7 +264,6 @@ const Payment = () => {
                         <input
                           type="tel"
                           required
-                          value={shippingDetails.zipCode}
                           onChange={(e) => {
                             setShippingDetails({
                               ...shippingDetails,
@@ -288,7 +283,7 @@ const Payment = () => {
                           onChange={(e) => {
                             setShippingDetails({
                               ...shippingDetails,
-                              country: e.targer.value,
+                              country: e.target.value,
                             });
                           }}
                           className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-foreground"
@@ -301,7 +296,7 @@ const Payment = () => {
 
                     <button
                       type="submit"
-                      className={`w-full py-3 gradient-primary text-primary-foreground 
+                      className={`w-full py-3 gradient-primary text-primary-foreground
                       rounded-lg hover:glow-on-hover animate-smooth font-semibold`}
                     >
                       Continue to Payment
@@ -312,6 +307,72 @@ const Payment = () => {
                     <PaymentForm />
                   </Elements>
                 )}
+              </div>
+
+              {/* Order summary */}
+              <div className="lg:col-span-1">
+                <div className="glass-panel sticky top-24">
+                  <h2 className="text-xl font-semibold text-foreground">
+                    Order summary
+                  </h2>
+
+                  <div className="space-y-4 mb-6">
+                    {cart.map((item) => {
+                      return (
+                        <div
+                          key={item.product}
+                          className="flex items-center space-x-3"
+                        >
+                          <img
+                            src={"/avatar-holder.avif"}
+                            // src={item.product.images[0].url}
+                            alt={item.product.name}
+                            className="size-12 object-cover rounded"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium  text-foreground truncate">
+                              {item.product.name}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              Quantity: {item.quantity}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold">
+                              ${Number(item.product.price) * item.quantity}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="space-y-2 border-t border-[hsla(var(--glass-border))] pt-4">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Subtotal</span>
+                      <span className="font-semibold">${total.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Shipping</span>
+                      <span className="font-semibold text-green-500">
+                        {totalWithTax >= 50 ? "Free" : "$2"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Tax</span>
+                      <span>{(total * 0.18).toFixed(2)}</span>
+                    </div>
+                    <div
+                      className={`flex justify-between font-semibold text-lg pt-2 border-t
+                      border-[hsla(var(--glass-border))]`}
+                    >
+                      <span className="text-muted-foreground">Total</span>
+                      <span className="text-primary">
+                        ${totalWithTax.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
