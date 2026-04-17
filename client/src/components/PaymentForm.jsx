@@ -8,7 +8,7 @@ import { toggleOrderStep } from "../store/slices/orderSlice";
 import { clearCart } from "../store/slices/cartSlice";
 
 const PaymentForm = () => {
-  const clientSecret = useState((state) => state.paymentIntent);
+  //  const clientSecret = useState((state) => state.paymentIntent);
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState("");
@@ -45,7 +45,57 @@ const PaymentForm = () => {
     dispatch(clearCart());
   };
 
-  return <></>;
+  return (
+    <>
+      <form onSubmit={handleSubmit} className="glass-panel">
+        <div className="flex items-center space-x-3 mb-6">
+          <div className="w-10 h-10 gradient-primary rounded-full flex items-center justify-center">
+            <CreditCard className="w-6 h-6 text-primary-foreground" />
+          </div>
+          <h2 className="text-xl font-semibold text-foreground">
+            Card Payment
+          </h2>
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Card Details *
+          </label>
+          <div className="px-4 py-3 bg-secondary border border-border rounded-lg focus:outline-none text-foreground">
+            <CardElement options={{ style: { base: { fontSize: "16px" } } }} />
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-2 mb-6 p-4 bg-secondary/50 rounded-lg">
+          <Lock className="w-5 h-5 text-green-500" />
+          <span className="text-sm text-muted-foreground">
+            Your card information is encrypted and secure.
+          </span>
+        </div>
+
+        <button
+          type="submit"
+          disabled={!stripe || isProcessing}
+          className="flex justify-center items-center gap-2 w-full py-3 gradient-primary text-primary-foreground rounded-lg hover:glow-on-hover animate-smooth font-semibold"
+        >
+          {isProcessing ? (
+            <>
+              <div
+                className={`w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin`}
+              />
+              <span className="text-white">Payment Processing ...</span>
+            </>
+          ) : (
+            "Complete Payment"
+          )}
+        </button>
+
+        {errorMessage && (
+          <p className="mt-4 text-sm text-red-500">{errorMessage}</p>
+        )}
+      </form>
+    </>
+  );
 };
 
 export default PaymentForm;
