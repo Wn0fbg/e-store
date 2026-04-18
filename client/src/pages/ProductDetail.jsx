@@ -13,12 +13,27 @@ import { useDispatch, useSelector } from "react-redux";
 import ReviewsContainer from "../components/Products/ReviewsContainer";
 import { addToCart } from "../store/slices/cartSlice";
 import { fetchProductDetails } from "../store/slices/productSlice";
+import { toast } from "react-toastify";
 
 const ProductDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const product = useSelector((state) => state.product?.productDetails);
   const { loading, productReviews } = useSelector((state) => state.product);
+
+  const handlecopyURL = () => {
+    const currentURL = window.location.href;
+    navigator.clipboard
+      .writeText(currentURL)
+      .then(() => {
+        toast.success("URL copied", currentURL);
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+      });
+  };
+
+  const handleBuyNow = () => {}
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -201,9 +216,10 @@ const ProductDetail = () => {
                     </button>
                     <button
                       disabled={product.stock === 0}
-                      className={`py-3 bg-secondary text-foreground border border-border 
-                      rounded-lg hover:bg-accent animate-smooth font-semibold 
-                      disabled:opacity-50 disabled:cursor-not-allowed`}
+                      onClick={handleBuyNow}
+                      className={`flex items-center justify-center space-x-2 py-3 gradient-primary
+                      text-primary-foreground rounded-lg hover:glow-on-hover animate-smooth 
+                      font-semibold disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
                       Buy Now
                     </button>
@@ -213,7 +229,10 @@ const ProductDetail = () => {
                       <Heart className="w-5 h-5" />
                       <span>Add to Wishlist</span>
                     </button>
-                    <button className="flex items-center space-x-2 text-muted-foreground hover:text-primary animate-smooth">
+                    <button
+                      onClick={handlecopyURL}
+                      className="flex items-center space-x-2 text-muted-foreground hover:text-primary animate-smooth"
+                    >
                       <Share2 className="w-5 h-5" />
                       <span>Share</span>
                     </button>
