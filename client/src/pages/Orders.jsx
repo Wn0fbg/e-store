@@ -17,7 +17,7 @@ const Orders = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchMyOrders())
+    dispatch(fetchMyOrders());
   }, [dispatch]);
 
   const filtetOrders = myOrders.filter(
@@ -186,7 +186,7 @@ const Orders = () => {
                             alt={item.title}
                             className="size-16 object-cover rounded-lg"
                           />
-                          <div className="flex min-w-0">
+                          <div className="flex-1 min-w-0">
                             <h4 className="font-medium text-foreground truncate">
                               {item.title}
                             </h4>
@@ -224,11 +224,20 @@ const Orders = () => {
                           </>
                         )}
 
-                        {/* {order.status === "Processing" && (
-                          <button className="px-4 py-2 glass-card hover:glow-on-hover animate-smooth text-sm text-destructive">
-                            Cancel Order
-                          </button>
-                        )} */}
+                        {order.status === "Delivered" && (
+                          <>
+                            <Link
+                              to={`/product/${""}`}
+                              className="px-4 py-2 glass-card hover:glow-on-hover animate-smooth text-sm text-destructive"
+                            >
+                              Write review
+                            </Link>
+
+                            <button className="px-4 py-2 glass-card hover:glow-on-hover animate-smooth text-sm text-destructive">
+                              Cancel Order
+                            </button>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>

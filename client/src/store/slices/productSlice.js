@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../lib/axios";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 export const fetchAllProducts = createAsyncThunk(
   "/product/fetchAll",
@@ -39,10 +40,7 @@ export const fetchProductDetails = createAsyncThunk(
   "product/singleProduct",
   async (id, thunkAPI) => {
     try {
-      console.log("Product fetched details");
-      console.log(id);
       const res = await axiosInstance.get(`product/singleProduct/${id}`);
-      console.log(res);
       return res.data.product;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -55,13 +53,18 @@ export const fetchProductDetails = createAsyncThunk(
 export const postReview = createAsyncThunk(
   "product/post-new/review",
   async ({ productId, review }, thunkAPI) => {
+    const state = thunkAPI.getState();
+    const authUser = state.auth.authUser;
     try {
       const res = await axiosInstance.put(
         `product/post-new/review/${productId}`,
         review,
       );
       toast.success(res.data.message);
-      return res.data.review;
+      return {
+        review: res.data.review,
+        authUser,
+      };
     } catch (error) {
       toast.error(error.responce.data.message || "Failedt to post review");
       return thunkAPI.rejectWithValue(
@@ -88,6 +91,8 @@ export const deleteReview = createAsyncThunk(
     }
   },
 );
+
+// const { authUser } = useSelector((state) => state.auth);
 
 const productSlice = createSlice({
   name: "product",
@@ -134,7 +139,32 @@ const productSlice = createSlice({
       })
       .addCase(postReview.fulfilled, (state, action) => {
         state.isPostingReview = false;
-        state.productReviews = [action.payload, ...state.productReviews];
+        // state.productReviews = [action.payload, ...state.productReviews];
+        const newReview = action.payload.review;
+        const authUser = action.payload.authUser;
+
+        const existingReviewIndex = state.productReviews.findIndex(
+          (rev) => rev.reviewer?.id === newReview.user_id,
+        );
+
+        if (existingReviewIndex != -1) {
+          state.productReviews[existingReviewIndex].rating = Number(
+            newReview.rating,
+          );
+          state.productReviews[existingReviewIndex].comment = newReview.comment;
+        } else {
+          state.productReviews = [
+            {
+              ...newReview,
+              reviewer: {
+                id: authUser?.id,
+                name: authUser?.name,
+                avatar: authUser?.avatar?.url,
+              },
+            },
+            ...state.productReviews,
+          ];
+        }
       })
       .addCase(postReview.rejected, (state) => {
         state.isPostingReview = false;

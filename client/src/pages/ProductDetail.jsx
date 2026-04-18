@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Star,
   ShoppingCart,
@@ -8,6 +8,7 @@ import {
   Plus,
   Minus,
   Loader,
+  CircleDollarSign,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import ReviewsContainer from "../components/Products/ReviewsContainer";
@@ -33,7 +34,11 @@ const ProductDetail = () => {
       });
   };
 
-  const handleBuyNow = () => {}
+  const navigateTo = useNavigate();
+  const handleBuyNow = () => {
+    dispatch(addToCart({ product, quantity }));
+    navigateTo("/payment");
+  };
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -221,7 +226,8 @@ const ProductDetail = () => {
                       text-primary-foreground rounded-lg hover:glow-on-hover animate-smooth 
                       font-semibold disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
-                      Buy Now
+                      <CircleDollarSign className="size-5" />
+                      <span>Buy Now</span>
                     </button>
                   </div>
                   <div className="flex items-center space-x-4 mt-4">
