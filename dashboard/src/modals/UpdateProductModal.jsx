@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleUpdateProductModal } from "../store/slices/extraSlice";
+// import { toggleUpdateProductModal } from "../store/slices/extraSlice";
 import { LoaderCircle } from "lucide-react";
-import { updateProduct } from "../store/slices/productsSlice";
+// import { updateProduct } from "../store/slices/productsSlice";
 
 const UpdateProductModal = ({ selectedProduct }) => {
   const { loading } = useSelector((state) => state.product);

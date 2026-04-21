@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createNewProduct } from "../store/slices/productsSlice";
-import { toggleCreateProductModal } from "../store/slices/extraSlice";
+// import { createNewProduct } from "../store/slices/productsSlice";
+// import { toggleCreateProductModal } from "../store/slices/extraSlice";
 import { LoaderCircle } from "lucide-react";
 
 const CreateProductModal = () => {
