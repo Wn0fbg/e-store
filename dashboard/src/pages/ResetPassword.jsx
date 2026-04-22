@@ -17,6 +17,9 @@ const ResetPassword = () => {
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
+    const data = new FormData();
+    data.append("password", formData.password);
+    data.append("confirmPassword", formData.confirmPassword);
     dispatch(resetPassword(data, token));
   };
 
@@ -80,7 +83,7 @@ const ResetPassword = () => {
               >
                 {loading ? (
                   <>
-                    <div className="size-5 border-2 bg-white border-t-transparent rounded-full animate-spin" />
+                    <div className="size-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     <span>Reseting password...</span>
                   </>
                 ) : (

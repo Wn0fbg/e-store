@@ -72,9 +72,9 @@ const Login = () => {
             </div>
 
             <div className="px-2 flex justify-between items-center text-sm text-gray-500">
-              <div>
+              <div className="flex items-center space-x-2">
                 <input type="checkbox" id="remember" className="size-4" />
-                <label htmlFor="remember">Remember my</label>
+                <label htmlFor="remember">Remember me</label>
               </div>
               <Link
                 to={"/password/forgot"}
@@ -94,7 +94,7 @@ const Login = () => {
               >
                 {loading ? (
                   <>
-                    <div className="size-5 border-2 bg-white border-t-transparent rounded-full animate-spin" />
+                    <div className="size-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     <span>Singing in...</span>
                   </>
                 ) : (

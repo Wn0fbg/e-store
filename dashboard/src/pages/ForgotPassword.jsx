@@ -66,7 +66,7 @@ const ForgotPassword = () => {
               >
                 {loading ? (
                   <>
-                    <div className="size-5 border-2 bg-white border-t-transparent rounded-full animate-spin" />
+                    <div className="size-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     <span>Requesting for email...</span>
                   </>
                 ) : (
