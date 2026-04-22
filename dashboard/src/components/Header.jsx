@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import avatar from "../assets/avatar.jpg";
+import Avatar from "../assets/avatar.jpg";
 import { Menu } from "lucide-react";
 import { toggleNavbar } from "../store/slices/extraSlice";
 
@@ -23,8 +23,8 @@ const Header = () => {
             onChange={() => dispatch(toggleNavbar())}
           />
           <img
-            src={user?.avatar.url || avatar}
-            alt={user?.name || avatar}
+            src={user?.avatar?.url || Avatar}
+            alt={user?.name || Avatar}
             className="size-14 rounded-full object-cover"
           />
         </div>

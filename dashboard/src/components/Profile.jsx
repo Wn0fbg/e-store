@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import avatar from "../assets/avatar.jpg";
+import Avatar from "../assets/avatar.jpg";
 import Header from "./Header";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -58,8 +58,58 @@ const Profile = () => {
       <main className="p-[10px] pl-[10px] md:pl-[17rem] w-full">
         {/* Header */}
         <div className="flex-1 md:p-6 mb:pb-0">
+          <Header />
           <h1 className="text-2xl font-bold">Profile</h1>
           <p className="text-sm text-gray-600 mb-6">Manage your profile.</p>
+        </div>
+
+        {/* Content */}
+        <div className="max-w-4xl md:px-4 py-8">
+          {/* Profile card */}
+          <div
+            className={`bg-white shadow-md rounded-lg p-6 flex flex-col md:flex-row items-center gap-6 mb-10`}
+          >
+            <img
+              src={(user && user?.avatar?.url) || Avatar}
+              alt={user?.name || Avatar}
+              className="size-32 rounded-full object-cover border"
+              loading="lazy"
+            />
+            <div>
+              <p className="text-xl font-medium">Name: {user.name}</p>
+              <p className="text-md text-gray-600">Email: {user.email}</p>
+              <p className="text-sm text-blue-500">Role: {user.role}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Update profile section */}
+        <div className="bg-gray-100 p-6 rounded-2xl shadow-md mb-10">
+          <h3 className="text-xl font-semibold mb-4">Update profile</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              type="text"
+              name="name"
+              value={editData.name}
+              onChange={handleProfileChange}
+              className="p-2 border rounded-md"
+              placeholder="Your name"
+            />
+            <input
+              type="email"
+              name="email"
+              value={editData.email}
+              onChange={handleProfileChange}
+              className="p-2 border rounded-md"
+              placeholder="Your email"
+            />
+            <input
+              type="file"
+              name="avatar"
+              onChange={handleAvatarChange}
+              className="p-2 border rounded-md col-span-1 md:col-span-2"
+            />
+          </div>
         </div>
       </main>
     </>
