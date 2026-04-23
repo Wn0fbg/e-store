@@ -75,11 +75,11 @@ const Profile = () => {
               className="size-32 rounded-full object-cover border"
               loading="lazy"
             />
-            <div>
+            {/* <div>
               <p className="text-xl font-medium">Name: {user.name}</p>
               <p className="text-md text-gray-600">Email: {user.email}</p>
               <p className="text-sm text-blue-500">Role: {user.role}</p>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -110,6 +110,23 @@ const Profile = () => {
               className="p-2 border rounded-md col-span-1 md:col-span-2"
             />
           </div>
+          <div>
+            <button
+              type="submit"
+              className={`flex justify-center items-center gap-2 rounded-lg bg-blue-600
+            hover:bg-blue-700 text-white font-semibold py-3 transition-all`}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <div className="size-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Updating profile...</span>
+                </>
+              ) : (
+                "Update profile"
+              )}
+            </button>
+          </div>
         </div>
       </main>
     </>
@@ -117,3 +134,4 @@ const Profile = () => {
 };
 
 export default Profile;
+
