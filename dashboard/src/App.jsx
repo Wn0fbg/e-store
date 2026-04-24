@@ -24,13 +24,13 @@ function App() {
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getUSer());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getUSer());
+  // }, []);
 
   const renderDashboardContent = () => {
     switch (openedComponent) {
-      case "Dashboardd":
+      case "Dashboard":
         <Dashboard />;
         break;
 
@@ -51,7 +51,7 @@ function App() {
         break;
 
       default:
-        return <Profile />;
+        return <Dashboard />;
     }
   };
 
