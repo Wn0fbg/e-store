@@ -21,7 +21,7 @@ const Login = () => {
   };
 
   const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
-  if (isAuthenticated && user.role === "Admin") {
+  if (isAuthenticated && user?.role === "Admin") {
     return <Navigate to="/" />;
   }
 

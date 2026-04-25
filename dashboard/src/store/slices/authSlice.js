@@ -97,11 +97,11 @@ export const login = (data) => async (dispatch) => {
   try {
     await axiosInstance.post("/auth/login", data).then((res) => {
       if (res.data.user.role === "Admin") {
-        dispatch(authSlice.actions.loginSuccess(res.data.action.user));
+        dispatch(authSlice.actions.loginSuccess(res.data.user));
         toast.success(res.data.message);
       } else {
         dispatch(authSlice.actions.loginFailed());
-        toast.success(res.data.message);
+        toast.error(res.data.message);
       }
     });
   } catch (error) {
@@ -195,7 +195,7 @@ export const updateAdminPassword = (data) => async (dispatch) => {
 };
 
 export const resetAuthSlice = () => async (dispatch) => {
-  dispatch(authSlice.actions.resetAuthSlice())
-}
+  dispatch(authSlice.actions.resetAuthSlice());
+};
 
 export default authSlice.reducer;
