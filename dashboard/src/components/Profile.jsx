@@ -144,7 +144,7 @@ const Profile = () => {
                 placeholder="Current password"
               />
               <input
-                type="password"
+                type="text"
                 name="newPassword"
                 value={passwordData.newPassword}
                 onChange={handlePasswordChange}
@@ -152,7 +152,7 @@ const Profile = () => {
                 placeholder="New password"
               />
               <input
-                type="password"
+                type="text"
                 name="confirmNewPassword"
                 value={passwordData.confirmNewPassword}
                 onChange={handlePasswordChange}
@@ -164,7 +164,7 @@ const Profile = () => {
               onClick={updatePassword}
               type="submit"
               className={`flex justify-center items-center gap-2 rounded-lg bg-blue-600
-              hover:bg-blue-700 text-white font-semibold py-3 px-6 transition-all`}
+              hover:bg-blue-700 text-white font-semibold py-3 px-6 transition-all mt-2`}
               disabled={loading}
             >
               {loading && updatingSection === "Password" ? (
