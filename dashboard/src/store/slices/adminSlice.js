@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../lib/axios";
+import { toast } from "react-toastify";
 
 export const adminSlice = createSlice({
   name: "admin",
@@ -70,8 +71,44 @@ export const fetchAllUsers = (page) => async (dispatch) => {
   dispatch(adminSlice.actions.getAllUsersRequest());
   await axiosInstance
     .get(`/admin/getallusers?page=${page || 1}`)
-    .then((res) => dispatch(adminSlice.actions.getAllUsersSuccess(res.data)))
-    .catch((error) => dispatch(adminSlice.actions.getAllUsersFailed()));
+    .then((res) => {
+      dispatch(adminSlice.actions.getAllUsersSuccess(res.data));
+    })
+    .catch((error) => {
+      dispatch(adminSlice.actions.getAllUsersFailed());
+    });
+};
+
+export const deleteUser = (id, page) => async (dispatch, getStata) => {
+  dispatch(adminSlice.actions.deleteUserRequest());
+  await axiosInstance
+    .delete(`/admin//delete/${id}`)
+    .then((res) => {
+      dispatch(adminSlice.actions.deleteUserSuccess(id));
+      toast.success(res.data.message || "User deleted successfuly.");
+      const state = getStata();
+      const updatedTotal = state.admin.totalUsers;
+      const updatedMaxPage = Math.ceil(updatedTotal / 10) || 1;
+
+      const validPage = Math.min(page, updatedMaxPage);
+      dispatch(fetchAllUsers(validPage));
+    })
+    .catch((error) => {
+      dispatch(adminSlice.actions.deleteUserFailed());
+      toast.error(error.response?.data?.message || "Failed to delete user.");
+    });
+};
+
+export const getDashboardStats = () => async (dispatch) => {
+  dispatch(adminSlice.actions.getStatsRequest());
+  await axiosInstance
+    .get(`/admin/fetch/dashboard-stats`)
+    .then((res) => {
+      dispatch(adminSlice.actions.getStatsSuccess(res.data));
+    })
+    .catch((error) => {
+      dispatch(adminSlice.actions.getStatsFailed());
+    });
 };
 
 export default adminSlice.reducer;
