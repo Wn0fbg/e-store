@@ -62,13 +62,12 @@ const SideBar = () => {
         <nav className="space-y-2">
           <div className="flex flex-col gap-2 py-2">
             <h2 className="flex items-center justify-between text-xl font-bold">
-              <span>Admin Panel</span>
+              <span>Admin panel</span>
               <MoveLeft
                 className="block md:hidden"
                 onClick={() => dispatch(toggleNavbar())}
               />
             </h2>
-            <hr />
           </div>
 
           {links.map((item, index) => {
@@ -81,13 +80,21 @@ const SideBar = () => {
                 key={index}
                 className={`${activeLink === index && "bg-dark-gradient text-white"}
                 hover:bg-gray-200 w-full transition-all duration-300 rounded-md cursor-pointer
-                  px-3 py-2 flex items-center gap-2`}
+                px-3 py-2 flex items-center gap-2`}
               >
                 {item.icon} {item.title}
               </button>
             );
           })}
         </nav>
+        <div className="pt-[570px]">
+          <button
+            onClick={handleLogout}
+            className="text-white rounded-md cursor-pointer flex items-center px-3 py-2 gap-2 bg-red-gradient w-full"
+          >
+            <LogOut /> Logout
+          </button>
+        </div>
       </aside>
     </>
   );
