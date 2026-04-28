@@ -83,33 +83,6 @@ const Orders = () => {
                     ))}
                   </select>
                 </div>
-
-                {filteredOrders.map((order) => {
-                  return (
-                    <div
-                      key={order.id}
-                      className="bg-white shadow-lg rounded-lg p-6 mb-6 transition-all"
-                    >
-                      <div className="felx justify-between items-center flex-wrap gap-4">
-                        <div>
-                          <p>
-                            <strong>Order id: </strong> {order.id}
-                          </p>
-                          <p>
-                            <strong>Status: </strong> {order.order_status}
-                          </p>
-                          <p>
-                            <strong>Placed at: </strong>{" "}
-                            {new Date(order.cretedAt).toLocaleString()}
-                          </p>
-                          <p>
-                            <strong>Total amount:</strong> $ {order.total_price}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
               </>
             )}
           </>
