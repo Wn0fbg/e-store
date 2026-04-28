@@ -13,7 +13,7 @@ const Header = () => {
     <>
       <header className="flex justify-between mb-3 pb-2">
         <p className="flex items-center gap-3 text-sm">
-          <span className="text-gray-500">{user?.name}</span>
+          <span className="text-gray-500">{user?.name}</span> /
           <span>{openedComponent}</span>
         </p>
         <div className="flex gap-3 items-center">
