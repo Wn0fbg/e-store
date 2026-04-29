@@ -6,7 +6,7 @@ import { deleteUser, fetchAllUsers } from "../store/slices/adminSlice";
 
 const Users = () => {
   const [page, setPage] = useState(1);
-  const { loading, totalUsers, users } = useSelector((state) => state.admin);
+  const { loading, users, totalUsers } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
 
   const [maxPage, setMaxPage] = useState(null);
@@ -98,28 +98,28 @@ const Users = () => {
               ) : (
                 <h3 className="text-2xl p-6 font-bold">No users found.</h3>
               )}
-
-              {/* Pagination */}
-              {!loading && users.length > 0 && (
-                <div className="flex justify-center mt-6 gap-4">
-                  <button
-                    onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                    disabled={page === 1}
-                    className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded disabled:opacity-50"
-                  >
-                    Previous
-                  </button>
-                  <span className="px-4 py-2 text-gray-700">Page {page}</span>
-                  <button
-                    onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                    disabled={page === 1}
-                    className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded disabled:opacity-50"
-                  >
-                    Next
-                  </button>
-                </div>
-              )}
             </div>
+
+            {/* Pagination */}
+            {!loading && users.length > 0 && (
+              <div className="flex justify-center mt-6 gap-4">
+                <button
+                  onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={page === 1}
+                  className={`px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded disabled:opacity-50`}
+                >
+                  Previeous
+                </button>
+                <span className="px-4 py-2 text-gray-700">Page {page}</span>
+                <button
+                  onClick={() => setPage((prev) => Math.max(prev + 1))}
+                  disabled={maxPage === page}
+                  className={`px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded disabled:opacity-50`}
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </main>
