@@ -49,7 +49,7 @@ const Users = () => {
             <div
               className={`overflow-x-auto rounded-lg ${
                 loading
-                  ? "p=10 shadow-none"
+                  ? "p-10 shadow-none"
                   : `${users && users.length > 0 && "shadow-lg"}`
               }`}
             >

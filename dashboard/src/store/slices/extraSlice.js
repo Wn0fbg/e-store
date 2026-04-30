@@ -16,7 +16,7 @@ const extraSlice = createSlice({
     toggleNavbar: (state) => {
       state.isNavbarOpened = !state.isNavbarOpened;
     },
-    toggleCreateProdcutModal: (state, action) => {
+    toggleCreateProductModal: (state, action) => {
       state.isCreateProductModalOpened = !state.isCreateProductModalOpened;
     },
     toggleViewProductModal: (state) => {
@@ -31,7 +31,7 @@ const extraSlice = createSlice({
 export const {
   toggleComponent,
   toggleNavbar,
-  toggleCreateProdcutModal,
+  toggleCreateProductModal,
   toggleViewProductModal,
   toggleUpdateProductModal,
 } = extraSlice.actions;

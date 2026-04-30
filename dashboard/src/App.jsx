@@ -18,6 +18,8 @@ import Profile from "./components/Profile";
 import Products from "./components/Products";
 import { useEffect } from "react";
 import { getUSer } from "./store/slices/authSlice";
+import { fetchAllOrders } from "./store/slices/orderSlice";
+import { fetchAllProducts } from "./store/slices/productsSlice";
 
 function App() {
   const { openedComponent } = useSelector((state) => state.extra);
@@ -27,6 +29,13 @@ function App() {
   useEffect(() => {
     dispatch(getUSer());
   }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(fetchAllOrders());
+      dispatch(fetchAllProducts())
+    }
+  }, [isAuthenticated]);
 
   const renderDashboardContent = () => {
     switch (openedComponent) {
