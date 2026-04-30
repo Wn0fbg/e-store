@@ -18,6 +18,8 @@ import Profile from "./components/Profile";
 import Products from "./components/Products";
 import { useEffect } from "react";
 import { getUSer } from "./store/slices/authSlice";
+import { fetchAllUsers } from "./store/slices/adminSlice";
+import { fetchAllProducts } from "./store/slices/productsSlice";
 
 function App() {
   const { openedComponent } = useSelector((state) => state.extra);
@@ -26,6 +28,13 @@ function App() {
 
   useEffect(() => {
     dispatch(getUSer());
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(fetchAllUsers());
+      dispatch(fetchAllProducts());
+    }
   }, []);
 
   const renderDashboardContent = () => {
@@ -40,7 +49,7 @@ function App() {
         return <Profile />;
       case "Products":
         return <Products />;
-        
+
       default:
         return <Dashboard />;
     }

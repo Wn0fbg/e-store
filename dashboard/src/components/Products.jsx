@@ -10,6 +10,7 @@ import {
   toggleUpdateProductModal,
   toggleViewProductModal,
 } from "../store/slices/extraSlice";
+import { deleteProduct } from "../store/slices/productsSlice";
 
 const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -122,7 +123,7 @@ const Products = () => {
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setSelectedProduct(product);
-                                // dispatch(deleteProduct.id, page);
+                                dispatch(deleteProduct(id, page));
                               }}
                             >
                               {setSelectedProduct?.id === product.id &&

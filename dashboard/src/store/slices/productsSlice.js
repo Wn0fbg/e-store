@@ -110,6 +110,25 @@ export const updateProduct = (data, id) => async (dispatch) => {
     });
 };
 
-export const deleteProduct = () => async (dispatch) => {};
+export const deleteProduct = (id, page) => async (dispatch) => {
+  dispatch(productSlice.actions.deleteProductRequest());
+  await axiosInstance
+    .delete(`/product/admin/delete/${id}`)
+    .then((res) => {
+      dispatch(productSlice.actions.deleteProductSuccess(id));
+      toast.success(res.data.message || "Product deleted successfuly");
+
+      const state = getState();
+      const updatedTotal = state.product.totalProducts;
+      const updatedMaxPage = Math.ceil(updatedTotal / 10) || 1;
+
+      const validPage = Math.min(page, updatedMaxPage);
+      dispatch(fetchAllProducts(validPage));
+    })
+    .catch((error) => {
+      dispatch(productSlice.actions.deleteProductFalied());
+      toast.error(error.response?.data?.message || "Failed to delete product");
+    });
+};
 
 export default productSlice.reducer;
