@@ -98,7 +98,7 @@ export const dashboardStats = catchAsyncErrors(async (req, res, next) => {
   // Today's Revenue
   const todayRevenueQuery = await database.query(
     `
-    SELECT SUM(total_price) FROM orders WHERE created_at::date = $1
+    SELECT SUM(total_price) FROM orders WHERE created_at::date = $1 AND paid_at IS NOT NULL
   `,
     [todayDate],
   );
@@ -107,7 +107,7 @@ export const dashboardStats = catchAsyncErrors(async (req, res, next) => {
   // Yesterday's Revenue
   const yesterdayRevenueQuery = await database.query(
     `
-    SELECT SUM(total_price) FROM orders WHERE created_at::date = $1
+    SELECT SUM(total_price) FROM orders WHERE created_at::date = $1 AND paid_at IS NOT NULL
   `,
     [yesterdayDate],
   );
@@ -150,8 +150,8 @@ export const dashboardStats = catchAsyncErrors(async (req, res, next) => {
   const currentMonthSalesQuery = await database.query(
     `
     SELECT SUM(total_price) AS total
-    FROM orders
-    WHERE created_at BETWEEN $1 AND $2
+    FROM orders 
+    WHERE paid_at IS NOT NULL AND created_at BETWEEN $1 AND $2
   `,
     [currentMonthStart, currentMonthEnd],
   );
@@ -170,7 +170,7 @@ export const dashboardStats = catchAsyncErrors(async (req, res, next) => {
     `
     SELECT SUM(total_price) AS total
     FROM orders 
-    WHERE created_at BETWEEN $1 AND $2
+    WHERE paid_at IS NOT NULL AND created_at BETWEEN $1 AND $2
   `,
     [previousMonthStart, previousMonthEnd],
   );

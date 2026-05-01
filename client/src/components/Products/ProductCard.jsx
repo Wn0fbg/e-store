@@ -25,7 +25,7 @@ const ProductCard = ({ product }) => {
             src={"/avatar-holder.avif"}
             // src={product.images[0].url}
             alt={product.name}
-            className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+            className="w-full h-48 object-contain group-hover:scale-110 transition-transform duration-300"
           />
 
           {/* Badges */}

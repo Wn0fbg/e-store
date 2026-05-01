@@ -13,15 +13,17 @@ const Stats = () => {
   } = useSelector((state) => state.admin);
 
   useEffect(() => {
-    let change =
-      yesterdayRevenue === 0
-        ? 100
-        : ((todayRevenue - yesterdayRevenue) / yesterdayRevenue) * 100;
-    const revenueChangeText = `${change >= 0 ? "+" : "-"}${change.toFixed(
-      2,
-    )}% from yesterday`;
-    setRevenueChange(revenueChangeText);
-  }, []);
+    if (yesterdayRevenue) {
+      let change =
+        yesterdayRevenue === 0
+          ? 100
+          : ((todayRevenue - yesterdayRevenue) / yesterdayRevenue) * 100;
+      const revenueChangeText = `${change >= 0 ? "+" : "-"}${change.toFixed(
+        2,
+      )}% from yesterday`;
+      setRevenueChange(revenueChangeText);
+    }
+  }, [yesterdayRevenue]);
 
   const stats = [
     {

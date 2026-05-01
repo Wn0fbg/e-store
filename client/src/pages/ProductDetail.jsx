@@ -87,7 +87,7 @@ const ProductDetail = () => {
                     src={"/avatar-holder.avif"}
                     // src={product.images[selectedImage]?.url}
                     alt={product.name}
-                    className="w-full h-96 object-cover rounded-lg"
+                    className="w-full h-96 object-contain rounded-lg"
                   />
                 ) : (
                   <div className="glass-card min-h-[418px] p-4 mb-4 animate-pulse" />
@@ -110,7 +110,7 @@ const ProductDetail = () => {
                           src={"/avatar-holder.avif"}
                           // src={image?.url}
                           // alt={`${product.name} ${index + 1}`}
-                          className="w-full h-full"
+                          className="w-full h-full object-contain"
                         />
                       </button>
                     );
